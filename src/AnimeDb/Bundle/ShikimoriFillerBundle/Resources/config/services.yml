@@ -1,8 +1,13 @@
 services:
     anime_db.shikimori.search:
         class: AnimeDb\Bundle\ShikimoriFillerBundle\Service\Search
-        arguments: [ %anime_db.shikimori.api.host%, %anime_db.shikimori.api.prefix% ]
+        arguments: [ %anime_db.shikimori.api.host%, @anime_db.shikimori.browser ]
         tags:
             -  { name: anime_db.search }
         calls:
             - [setRouter, ['@router']]
+            - [setFiller, ['@anime_db.shikimori.filler']]
+
+    anime_db.shikimori.browser:
+        class: AnimeDb\Bundle\ShikimoriFillerBundle\Service\Browser
+        arguments: [ %anime_db.shikimori.api.host%, %anime_db.shikimori.api.prefix% ]

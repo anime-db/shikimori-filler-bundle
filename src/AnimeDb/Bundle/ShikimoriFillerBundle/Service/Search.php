@@ -12,8 +12,7 @@ namespace AnimeDb\Bundle\ShikimoriFillerBundle\Service;
 
 use AnimeDb\Bundle\CatalogBundle\Plugin\Fill\Search\Search as SearchPlugin;
 use AnimeDb\Bundle\CatalogBundle\Plugin\Fill\Search\Item as ItemSearch;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Guzzle\Http\Client;
+use AnimeDb\Bundle\ShikimoriFillerBundle\Service\Browser;
 
 /**
  * Search from site shikimori.org
@@ -60,21 +59,21 @@ class Search extends SearchPlugin
     private $host;
 
     /**
-     * API path prefix
+     * Browser
      *
-     * @var string
+     * @var \AnimeDb\Bundle\ShikimoriFillerBundle\Service\Browser
      */
-    private $prefix;
+    private $browser;
 
     /**
      * Construct
      *
      * @param string $host
-     * @param string $prefix
+     * @param \AnimeDb\Bundle\ShikimoriFillerBundle\Service\Browser $browser
      */
-    public function __construct($host, $prefix) {
+    public function __construct($host, Browser $browser) {
         $this->host = $host;
-        $this->prefix = $prefix;
+        $this->browser = $browser;
     }
 
     /**
@@ -111,20 +110,9 @@ class Search extends SearchPlugin
      */
     public function search(array $data)
     {
-        $path = str_replace('#NAME#', urlencode($data['name']), $this->prefix.self::SEARH_URL);
+        $path = str_replace('#NAME#', urlencode($data['name']), self::SEARH_URL);
         $path = str_replace('#LIMIT#', self::DEFAULT_LIMIT, $path);
-        $client = new Client($this->host);
-
-        /* @var $response \Guzzle\Http\Message\Response */
-        $response = $client->get($path)->send();
-        if ($response->isError()) {
-            throw new \RuntimeException('Failed to query the server '.self::TITLE);
-        }
-        $body = $response->getBody(true);
-        $body = json_decode($body, true);
-        if (json_last_error() !== JSON_ERROR_NONE || !is_array($body)) {
-            throw new \RuntimeException('Invalid response from the server '.self::TITLE);
-        }
+        $body = $this->browser->get($path);
 
         // build list
         foreach ($body as $key => $item) {
