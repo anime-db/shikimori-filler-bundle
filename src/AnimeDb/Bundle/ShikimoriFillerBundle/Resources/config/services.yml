@@ -8,6 +8,19 @@ services:
             - [setRouter, ['@router']]
             - [setFiller, ['@anime_db.shikimori.filler']]
 
+    anime_db.shikimori.filler:
+        class: AnimeDb\Bundle\ShikimoriFillerBundle\Service\Filler
+        arguments:
+            - %anime_db.shikimori.api.host%
+            - @anime_db.shikimori.browser
+            - @doctrine
+            - @validator
+            - @filesystem
+        tags:
+            -  { name: anime_db.filler }
+        calls:
+            - [setRouter, ['@router']]
+
     anime_db.shikimori.browser:
         class: AnimeDb\Bundle\ShikimoriFillerBundle\Service\Browser
         arguments: [ %anime_db.shikimori.api.host%, %anime_db.shikimori.api.prefix% ]
