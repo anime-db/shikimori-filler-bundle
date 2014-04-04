@@ -82,30 +82,20 @@ class Filler extends FillerPlugin
     private $validator;
 
     /**
-     * Filesystem
-     *
-     * @var \Symfony\Component\Filesystem\Filesystem
-     */
-    private $fs;
-
-    /**
      * Construct
      *
      * @param \AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser $browser
      * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine
      * @param \Symfony\Component\Validator\Validator $validator
-     * @param \Symfony\Component\Filesystem\Filesystem $fs
      */
     public function __construct(
         Browser $browser,
         Registry $doctrine,
-        Validator $validator,
-        Filesystem $fs
+        Validator $validator
     ) {
         $this->browser = $browser;
         $this->doctrine = $doctrine;
         $this->validator = $validator;
-        $this->fs = $fs;
     }
 
     /**

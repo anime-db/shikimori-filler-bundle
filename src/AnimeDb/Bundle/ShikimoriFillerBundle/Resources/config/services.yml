@@ -3,15 +3,15 @@ services:
         class: AnimeDb\Bundle\ShikimoriFillerBundle\Service\Search
         arguments: [ @anime_db.shikimori.browser ]
         tags:
-            -  { name: anime_db.search }
+            - { name: anime_db.search }
         calls:
             - [setRouter, ['@router']]
             - [setFiller, ['@anime_db.shikimori.filler']]
 
     anime_db.shikimori.filler:
         class: AnimeDb\Bundle\ShikimoriFillerBundle\Service\Filler
-        arguments: [ @anime_db.shikimori.browser, @doctrine, @validator, @filesystem ]
+        arguments: [ @anime_db.shikimori.browser, @doctrine, @validator ]
         tags:
-            -  { name: anime_db.filler }
+            - { name: anime_db.filler }
         calls:
             - [setRouter, ['@router']]
