@@ -15,3 +15,9 @@ services:
             - { name: anime_db.filler }
         calls:
             - [setRouter, ['@router']]
+
+    anime_db.shikimori.refiller:
+        class: AnimeDb\Bundle\ShikimoriFillerBundle\Service\Refiller
+        arguments: [ @anime_db.shikimori.browser, @anime_db.shikimori.filler, @anime_db.shikimori.search ]
+        tags:
+            - { name: anime_db.refiller }

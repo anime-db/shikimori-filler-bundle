@@ -166,7 +166,7 @@ class Filler extends FillerPlugin
      *
      * @return \AnimeDb\Bundle\CatalogBundle\Entity\Item
      */
-    protected function setNames(Item $item, $body)
+    public function setNames(Item $item, $body)
     {
         $names = array_merge([$body['russian']], $body['english'], $body['japanese'], $body['synonyms']);
         foreach ($names as $value) {
@@ -185,7 +185,7 @@ class Filler extends FillerPlugin
      *
      * @return \AnimeDb\Bundle\CatalogBundle\Entity\Item
      */
-    protected function setCover(Item $item, $body)
+    public function setCover(Item $item, $body)
     {
         if (!empty($body['image']) && !empty($body['image']['original'])) {
             try {
@@ -204,7 +204,7 @@ class Filler extends FillerPlugin
      *
      * @return \AnimeDb\Bundle\CatalogBundle\Entity\Item
      */
-    protected function setType(Item $item, $body)
+    public function setType(Item $item, $body)
     {
         $rename = [
             'Movie' => 'Feature',
@@ -223,7 +223,7 @@ class Filler extends FillerPlugin
      *
      * @return \AnimeDb\Bundle\CatalogBundle\Entity\Item
      */
-    protected function setGenres(Item $item, $body)
+    public function setGenres(Item $item, $body)
     {
         $rename = [
             'Martial Arts' => 'Martial arts',
@@ -252,7 +252,7 @@ class Filler extends FillerPlugin
      *
      * @return \AnimeDb\Bundle\CatalogBundle\Entity\Item
      */
-    protected function setStudio(Item $item, $body)
+    public function setStudio(Item $item, $body)
     {
         $rename = [
             'Arms' => 'Arms Corporation',
