@@ -11,7 +11,7 @@
 namespace AnimeDb\Bundle\ShikimoriFillerBundle\Service;
 
 use AnimeDb\Bundle\CatalogBundle\Plugin\Fill\Filler\Filler as FillerPlugin;
-use AnimeDb\Bundle\ShikimoriFillerBundle\Service\Browser;
+use AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\Validator\Validator;
 use Symfony\Component\Filesystem\Filesystem;
@@ -63,7 +63,7 @@ class Filler extends FillerPlugin
     /**
      * Browser
      *
-     * @var \AnimeDb\Bundle\ShikimoriFillerBundle\Service\Browser
+     * @var \AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser
      */
     private $browser;
 
@@ -91,7 +91,7 @@ class Filler extends FillerPlugin
     /**
      * Construct
      *
-     * @param \AnimeDb\Bundle\ShikimoriFillerBundle\Service\Browser $browser
+     * @param \AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser $browser
      * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine
      * @param \Symfony\Component\Validator\Validator $validator
      * @param \Symfony\Component\Filesystem\Filesystem $fs

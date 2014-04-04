@@ -12,7 +12,7 @@ namespace AnimeDb\Bundle\ShikimoriFillerBundle\Service;
 
 use AnimeDb\Bundle\CatalogBundle\Plugin\Fill\Search\Search as SearchPlugin;
 use AnimeDb\Bundle\CatalogBundle\Plugin\Fill\Search\Item as ItemSearch;
-use AnimeDb\Bundle\ShikimoriFillerBundle\Service\Browser;
+use AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser;
 
 /**
  * Search from site shikimori.org
@@ -54,14 +54,14 @@ class Search extends SearchPlugin
     /**
      * Browser
      *
-     * @var \AnimeDb\Bundle\ShikimoriFillerBundle\Service\Browser
+     * @var \AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser
      */
     private $browser;
 
     /**
      * Construct
      *
-     * @param \AnimeDb\Bundle\ShikimoriFillerBundle\Service\Browser $browser
+     * @param \AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser $browser
      */
     public function __construct(Browser $browser) {
         $this->browser = $browser;

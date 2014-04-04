@@ -15,10 +15,3 @@ services:
             -  { name: anime_db.filler }
         calls:
             - [setRouter, ['@router']]
-
-    anime_db.shikimori.browser:
-        class: AnimeDb\Bundle\ShikimoriFillerBundle\Service\Browser
-        arguments:
-            - %anime_db.shikimori.host%
-            - %anime_db.shikimori.api.host%
-            - %anime_db.shikimori.api.prefix%
