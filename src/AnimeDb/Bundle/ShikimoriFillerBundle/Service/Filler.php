@@ -229,10 +229,19 @@ class Filler extends FillerPlugin
      */
     protected function setGenres(Item $item, $body)
     {
+        $rename = [
+            'Martial Arts' => 'Martial arts',
+            'Shoujo Ai' => 'Shoujo-ai',
+            'Shounen Ai' => 'Shounen-ai',
+            'Sports' => 'Sport',
+            'Vampire' => 'Vampires',
+            'Slice of Life' => 'Slice of life',
+            'Sci-Fi' => 'Sci-fi'
+        ];
+        $repository = $this->doctrine->getRepository('AnimeDbCatalogBundle:Genre');
         foreach ($body['genres'] as $genre) {
-            $genre = $this->doctrine
-                ->getRepository('AnimeDbCatalogBundle:Genre')
-                ->findOneByName($genre);
+            $genre = isset($rename[$genre['name']]) ? $rename[$genre['name']] : $genre['name'];
+            $genre = $repository->findOneByName($genre);
             if ($genre instanceof Genre) {
                 $item->addGenre($genre);
             }
@@ -250,10 +259,9 @@ class Filler extends FillerPlugin
      */
     protected function setStudio(Item $item, $body)
     {
+        $repository = $this->doctrine->getRepository('AnimeDbCatalogBundle:Studio');
         foreach ($body['studios'] as $studio) {
-            $studio = $this->doctrine
-                ->getRepository('AnimeDbCatalogBundle:Studio')
-                ->findOneByName($studio['name']);
+            $studio = $repository->findOneBy(['name' => [$studio['name'], $studio['filtered_name']]]);
             if ($studio instanceof Studio) {
                 $item->setStudio($studio);
                 break;
