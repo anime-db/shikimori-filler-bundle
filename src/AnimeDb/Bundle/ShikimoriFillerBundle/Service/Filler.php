@@ -142,8 +142,6 @@ class Filler extends FillerPlugin
         }
         $path = str_replace('#ID#', $match['id'], self::FILL_URL);
         $body = $this->browser->get($path);
-        p($body);
-        exit;
 
         $item = new Item();
         $item->setDuration($body['duration']);
