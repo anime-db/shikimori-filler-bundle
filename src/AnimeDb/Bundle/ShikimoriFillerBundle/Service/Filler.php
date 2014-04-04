@@ -259,9 +259,18 @@ class Filler extends FillerPlugin
      */
     protected function setStudio(Item $item, $body)
     {
+        $rename = [
+            'Arms' => 'Arms Corporation',
+            'Mushi Productions' => 'Mushi Production',
+            'Film Roman, Inc.' => 'Film Roman',
+            'Tezuka Production' => 'Tezuka Productions',
+            'CoMix Wave' => 'CoMix Wave Inc.'
+        ];
         $repository = $this->doctrine->getRepository('AnimeDbCatalogBundle:Studio');
         foreach ($body['studios'] as $studio) {
-            $studio = $repository->findOneBy(['name' => [$studio['name'], $studio['filtered_name']]]);
+            $name = isset($rename[$studio['name']]) ? $rename[$studio['name']] : $studio['name'];
+            $name = $studio['name'] != $studio['filtered_name'] ? [$name, $studio['filtered_name']] : $name;
+            $studio = $repository->findOneByName($name);
             if ($studio instanceof Studio) {
                 $item->setStudio($studio);
                 break;
