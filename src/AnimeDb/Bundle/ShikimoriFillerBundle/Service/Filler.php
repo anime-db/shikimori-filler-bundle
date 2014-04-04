@@ -240,7 +240,6 @@ class Filler extends FillerPlugin
             'Shoujo Ai' => 'Shoujo-ai',
             'Shounen Ai' => 'Shounen-ai',
             'Sports' => 'Sport',
-            'Vampire' => 'Vampires',
             'Slice of Life' => 'Slice of life',
             'Sci-Fi' => 'Sci-fi'
         ];
