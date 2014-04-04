@@ -60,13 +60,6 @@ class Filler extends FillerPlugin
     const REG_ITEM_ID = '#/animes/(?<id>\d+)\-#';
 
     /**
-     * API host
-     *
-     * @var string
-     */
-    private $host;
-
-    /**
      * Browser
      *
      * @var \AnimeDb\Bundle\ShikimoriFillerBundle\Service\Browser
@@ -97,20 +90,17 @@ class Filler extends FillerPlugin
     /**
      * Construct
      *
-     * @param string $host
      * @param \AnimeDb\Bundle\ShikimoriFillerBundle\Service\Browser $browser
      * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine
      * @param \Symfony\Component\Validator\Validator $validator
      * @param \Symfony\Component\Filesystem\Filesystem $fs
      */
     public function __construct(
-        $host,
         Browser $browser,
         Registry $doctrine,
         Validator $validator,
         Filesystem $fs
     ) {
-        $this->host = $host;
         $this->browser = $browser;
         $this->doctrine = $doctrine;
         $this->validator = $validator;
@@ -145,13 +135,15 @@ class Filler extends FillerPlugin
     public function fill(array $data)
     {
         if (empty($data['url']) || !is_string($data['url']) ||
-            strpos($data['url'], $this->host) !== 0 ||
+            strpos($data['url'], $this->browser->getHost()) !== 0 ||
             !preg_match(self::REG_ITEM_ID, $data['url'], $match)
         ) {
             return null;
         }
         $path = str_replace('#ID#', $match['id'], self::FILL_URL);
         $body = $this->browser->get($path);
+        p($body);
+        exit;
 
         $item = new Item();
         $item->setDuration($body['duration']);
@@ -209,7 +201,7 @@ class Filler extends FillerPlugin
         if (!empty($body['image']) && !empty($body['image']['original'])) {
             try {
                 $ext = pathinfo(parse_url($body['image']['original'], PHP_URL_PATH), PATHINFO_EXTENSION);
-                $item->setCover($this->uploadImage($this->host.$body['image']['original'], $body['id'].'/1.'.$ext));
+                $item->setCover($this->uploadImage($this->browser->getHost().$body['image']['original'], $body['id'].'/1.'.$ext));
             } catch (\Exception $e) {}
         }
         return $item;

@@ -23,18 +23,25 @@ use Guzzle\Http\Client;
 class Browser
 {
     /**
-     * API host
+     * Host
      *
      * @var string
      */
     private $host;
 
     /**
+     * API host
+     *
+     * @var string
+     */
+    private $api_host;
+
+    /**
      * API path prefix
      *
      * @var string
      */
-    private $prefix;
+    private $api_prefix;
 
     /**
      * HTTP client
@@ -47,11 +54,14 @@ class Browser
      * Construct
      *
      * @param string $host
-     * @param string $prefix
+     * @param string $api_host
+     * @param string $api_prefix
      */
-    public function __construct($host, $prefix) {
+    public function __construct($host, $api_host, $api_prefix)
+    {
         $this->host = $host;
-        $this->prefix = $prefix;
+        $this->api_host = $api_host;
+        $this->api_prefix = $api_prefix;
     }
 
     /**
@@ -62,9 +72,29 @@ class Browser
     protected function getClient()
     {
         if (!($this->client instanceof Client)) {
-            $this->client = new Client($this->host);
+            $this->client = new Client($this->api_host);
         }
         return $this->client;
+    }
+
+    /**
+     * Get host
+     *
+     * @return string
+     */
+    public function getHost()
+    {
+        return $this->host;
+    }
+
+    /**
+     * Get API host
+     *
+     * @return string
+     */
+    public function getApiHost()
+    {
+        return $this->api_host;
     }
 
     /**
@@ -74,15 +104,16 @@ class Browser
      *
      * @return mixed
      */
-    public function get($path) {
+    public function get($path)
+    {
         /* @var $response \Guzzle\Http\Message\Response */
-        $response = $this->getClient()->get($this->prefix.$path)->send();
+        $response = $this->getClient()->get($this->api_prefix.$path)->send();
         if ($response->isError()) {
-            throw new \RuntimeException('Failed to query the server '.$this->host);
+            throw new \RuntimeException('Failed to query the server '.$this->api_host);
         }
         $body = @json_decode($response->getBody(true), true);
         if (json_last_error() !== JSON_ERROR_NONE || !is_array($body)) {
-            throw new \RuntimeException('Invalid response from the server '.$this->host);
+            throw new \RuntimeException('Invalid response from the server '.$this->api_host);
         }
         return $body;
     }

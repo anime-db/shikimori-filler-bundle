@@ -52,13 +52,6 @@ class Search extends SearchPlugin
     const DEFAULT_LIMIT = 30;
 
     /**
-     * API host
-     *
-     * @var string
-     */
-    private $host;
-
-    /**
      * Browser
      *
      * @var \AnimeDb\Bundle\ShikimoriFillerBundle\Service\Browser
@@ -68,11 +61,9 @@ class Search extends SearchPlugin
     /**
      * Construct
      *
-     * @param string $host
      * @param \AnimeDb\Bundle\ShikimoriFillerBundle\Service\Browser $browser
      */
-    public function __construct($host, Browser $browser) {
-        $this->host = $host;
+    public function __construct(Browser $browser) {
         $this->browser = $browser;
     }
 
@@ -118,8 +109,8 @@ class Search extends SearchPlugin
         foreach ($body as $key => $item) {
             $body[$key] = new ItemSearch(
                 $item['name'],
-                $this->getLinkForFill($this->host.$item['url']),
-                $this->host.$item['image']['original'],
+                $this->getLinkForFill($this->browser->getHost().$item['url']),
+                $this->browser->getHost().$item['image']['original'],
                 $item['russian']
             );
         }
