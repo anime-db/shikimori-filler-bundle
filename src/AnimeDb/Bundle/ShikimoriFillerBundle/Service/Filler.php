@@ -18,6 +18,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use AnimeDb\Bundle\CatalogBundle\Entity\Item;
 use AnimeDb\Bundle\CatalogBundle\Entity\Name;
 use AnimeDb\Bundle\CatalogBundle\Entity\Source;
+use AnimeDb\Bundle\CatalogBundle\Entity\Type;
 use AnimeDb\Bundle\CatalogBundle\Entity\Genre;
 use AnimeDb\Bundle\CatalogBundle\Entity\Studio;
 use AnimeDb\Bundle\AppBundle\Entity\Field\Image as ImageField;
@@ -215,8 +216,13 @@ class Filler extends FillerPlugin
      */
     protected function setType(Item $item, $body)
     {
-        // TODO set type
-        return $item;
+        $rename = [
+            'Movie' => 'Feature',
+            'Music' => 'Music video',
+            'Special' => 'TV-special'
+        ];
+        $type = isset($rename[$body['kind']]) ? $rename[$body['kind']] : $body['kind'];
+        return $item->setType($this->doctrine->getRepository('AnimeDbCatalogBundle:Type')->findOneByName($type));
     }
 
     /**
