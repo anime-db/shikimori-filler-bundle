@@ -145,7 +145,7 @@ class Filler extends FillerPlugin
 
         $item = new Item();
         $item->setDuration($body['duration']);
-        $item->setSummary(!empty($body['description_html']) ? $body['description_html'] : $body['description']);
+        $item->setSummary($body['description']);
         $item->setDatePremiere(new \DateTime($body['aired_on']));
         if ($body['released_on']) {
             $item->setDateEnd(new \DateTime($body['released_on']));
