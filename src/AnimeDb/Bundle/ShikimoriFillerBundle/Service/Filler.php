@@ -212,10 +212,8 @@ class Filler extends FillerPlugin
         if (!empty($body['image']) && !empty($body['image']['original'])) {
             try {
                 $ext = pathinfo(parse_url($body['image']['original'], PHP_URL_PATH), PATHINFO_EXTENSION);
-                $item->setCover($this->uploadImage(
-                    $this->browser->getHost().$body['image']['original'],
-                    $body['id'].'/1.'.$ext
-                ));
+                $target = self::NAME.'/'.$body['id'].'/cover.'.$ext;
+                $item->setCover($this->uploadImage($this->browser->getHost().$body['image']['original'], $target));
             } catch (\Exception $e) {}
         }
         return $item;
@@ -313,8 +311,9 @@ class Filler extends FillerPlugin
     {
         $images = $this->browser->get(str_replace('#ID#', $body['id'], self::FILL_IMAGES_URL));
         foreach ($images as $image) {
-            $file = pathinfo(parse_url($image['original'], PHP_URL_PATH), PATHINFO_BASENAME);
-            if ($path = $this->uploadImage($this->browser->getHost().$image['original'], $body['id'].'/'.$file)) {
+            $filename = pathinfo(parse_url($image['original'], PHP_URL_PATH), PATHINFO_BASENAME);
+            $target = self::NAME.'/'.$body['id'].'/'.$filename;
+            if ($path = $this->uploadImage($this->browser->getHost().$image['original'], $target)) {
                 $image = new Image();
                 $image->setSource($path);
                 $item->addImage($image);
