@@ -22,6 +22,7 @@ use AnimeDb\Bundle\CatalogBundle\Entity\Type;
 use AnimeDb\Bundle\CatalogBundle\Entity\Genre;
 use AnimeDb\Bundle\CatalogBundle\Entity\Studio;
 use AnimeDb\Bundle\AppBundle\Entity\Field\Image as ImageField;
+use AnimeDb\Bundle\ShikimoriFillerBundle\Form\Filler as FillerForm;
 
 /**
  * Search from site shikimori.org
@@ -114,6 +115,16 @@ class Filler extends FillerPlugin
      */
     public function getTitle() {
         return self::TITLE;
+    }
+
+    /**
+     * Get form
+     *
+     * @return \AnimeDb\Bundle\ShikimoriFillerBundle\Form\Filler
+     */
+    public function getForm()
+    {
+        return new FillerForm($this->browser->getHost());
     }
 
     /**
