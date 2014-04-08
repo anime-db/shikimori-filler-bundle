@@ -231,7 +231,9 @@ class Filler extends FillerPlugin
             'Shounen Ai' => 'Shounen-ai',
             'Sports' => 'Sport',
             'Slice of Life' => 'Slice of life',
-            'Sci-Fi' => 'Sci-fi'
+            'Sci-Fi' => 'Sci-fi',
+            'Historical' => 'History',
+            'Military' => 'War'
         ];
         $repository = $this->doctrine->getRepository('AnimeDbCatalogBundle:Genre');
         foreach ($body['genres'] as $genre) {
