@@ -51,6 +51,7 @@ class Refiller extends RefillerPlugin
         self::FIELD_DURATION,
         self::FIELD_EPISODES_NUMBER,
         self::FIELD_GENRES,
+        self::FIELD_IMAGES,
         self::FIELD_NAMES,
         self::FIELD_STUDIO,
         self::FIELD_SOURCES,
@@ -177,6 +178,9 @@ class Refiller extends RefillerPlugin
                 break;
             case self::FIELD_GENRES:
                 $this->filler->setGenres($item, $body);
+                break;
+            case self::FIELD_IMAGES:
+                $this->filler->setImages($item, $body);
                 break;
             case self::FIELD_NAMES:
                 $this->filler->setNames($item, $body);

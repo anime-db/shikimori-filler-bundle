@@ -21,7 +21,9 @@ use AnimeDb\Bundle\CatalogBundle\Entity\Source;
 use AnimeDb\Bundle\CatalogBundle\Entity\Type;
 use AnimeDb\Bundle\CatalogBundle\Entity\Genre;
 use AnimeDb\Bundle\CatalogBundle\Entity\Studio;
+use AnimeDb\Bundle\CatalogBundle\Entity\Image;
 use AnimeDb\Bundle\AppBundle\Entity\Field\Image as ImageField;
+use AnimeDb\Bundle\ShikimoriFillerBundle\Form\Filler as FillerForm;
 
 /**
  * Search from site shikimori.org
@@ -59,6 +61,13 @@ class Filler extends FillerPlugin
      * @var string
      */
     const REG_ITEM_ID = '#/animes/(?<id>\d+)\-#';
+
+    /**
+     * Path to item screenshots
+     *
+     * @var string
+     */
+    const FILL_IMAGES_URL = '/animes/#ID#/screenshots';
 
     /**
      * Browser
@@ -117,6 +126,16 @@ class Filler extends FillerPlugin
     }
 
     /**
+     * Get form
+     *
+     * @return \AnimeDb\Bundle\ShikimoriFillerBundle\Form\Filler
+     */
+    public function getForm()
+    {
+        return new FillerForm($this->browser->getHost());
+    }
+
+    /**
      * Fill item from source
      *
      * @param array $date
@@ -155,6 +174,9 @@ class Filler extends FillerPlugin
         $this->setNames($item, $body);
         $this->setGenres($item, $body);
         $this->setStudio($item, $body);
+        if ($data['frames']) {
+            $this->setImages($item, $body);
+        }
         return $item;
     }
 
@@ -190,7 +212,10 @@ class Filler extends FillerPlugin
         if (!empty($body['image']) && !empty($body['image']['original'])) {
             try {
                 $ext = pathinfo(parse_url($body['image']['original'], PHP_URL_PATH), PATHINFO_EXTENSION);
-                $item->setCover($this->uploadImage($this->browser->getHost().$body['image']['original'], $body['id'].'/1.'.$ext));
+                $item->setCover($this->uploadImage(
+                    $this->browser->getHost().$body['image']['original'],
+                    $body['id'].'/1.'.$ext
+                ));
             } catch (\Exception $e) {}
         }
         return $item;
@@ -271,6 +296,28 @@ class Filler extends FillerPlugin
             if ($studio instanceof Studio) {
                 $item->setStudio($studio);
                 break;
+            }
+        }
+        return $item;
+    }
+
+    /**
+     * Set item images
+     *
+     * @param \AnimeDb\Bundle\CatalogBundle\Entity\Item $item
+     * @param array $body
+     *
+     * @return \AnimeDb\Bundle\CatalogBundle\Entity\Item
+     */
+    public function setImages(Item $item, $body)
+    {
+        $images = $this->browser->get(str_replace('#ID#', $body['id'], self::FILL_IMAGES_URL));
+        foreach ($images as $image) {
+            $file = pathinfo(parse_url($image['original'], PHP_URL_PATH), PATHINFO_BASENAME);
+            if ($path = $this->uploadImage($this->browser->getHost().$image['original'], $body['id'].'/'.$file)) {
+                $image = new Image();
+                $image->setSource($path);
+                $item->addImage($image);
             }
         }
         return $item;
