@@ -15,6 +15,7 @@ use AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\Validator\Validator;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\Request;
 use AnimeDb\Bundle\CatalogBundle\Entity\Item;
 use AnimeDb\Bundle\CatalogBundle\Entity\Name;
 use AnimeDb\Bundle\CatalogBundle\Entity\Source;
@@ -91,6 +92,13 @@ class Filler extends FillerPlugin
     private $validator;
 
     /**
+     * Request
+     *
+     * @var \Symfony\Component\HttpFoundation\Request
+     */
+    protected $request;
+
+    /**
      * Construct
      *
      * @param \AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser $browser
@@ -123,6 +131,16 @@ class Filler extends FillerPlugin
      */
     public function getTitle() {
         return self::TITLE;
+    }
+
+    /**
+     * Set request
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     */
+    public function setRequest(Request $request = null)
+    {
+        $this->request = $request;
     }
 
     /**
@@ -190,13 +208,31 @@ class Filler extends FillerPlugin
      */
     public function setNames(Item $item, $body)
     {
-        $names = array_merge([$body['russian']], $body['english'], $body['japanese'], $body['synonyms']);
+        // set a name based on the locale
+        if ($this->request instanceof Request) {
+            $locale = substr($this->request->getLocale(), 0, 2);
+            if ($locale == 'ru' && $body['russian']) {
+                $names = array_merge([$body['name']], $body['english'], $body['japanese'], $body['synonyms']);
+                $item->setName($body['russian']);
+            } elseif ($locale == 'js' && $body['japanese']) {
+                $item->setName(array_shift($body['japanese']));
+                $names = array_merge([$body['name']], [$body['russian']], $body['english'], $body['japanese'], $body['synonyms']);
+            }
+        }
+
+        // default list names
+        if (!$item->getName()) {
+            $names = array_merge([$body['russian']], $body['english'], $body['japanese'], $body['synonyms']);
+            $item->setName($body['name']);
+        }
+
         foreach ($names as $value) {
             if ($value != $body['name']) {
                 $item->addName((new Name())->setName($value));
             }
         }
-        return $item->setName($body['name']);
+
+        return $item;
     }
 
     /**

@@ -15,6 +15,7 @@ services:
             - { name: anime_db.filler }
         calls:
             - [setRouter, ['@router']]
+            - [setRequest, ['@?request=']]
 
     anime_db.shikimori.refiller:
         class: AnimeDb\Bundle\ShikimoriFillerBundle\Service\Refiller
