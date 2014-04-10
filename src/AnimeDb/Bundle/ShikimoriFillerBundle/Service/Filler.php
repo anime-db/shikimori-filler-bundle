@@ -71,6 +71,27 @@ class Filler extends FillerPlugin
     const FILL_IMAGES_URL = '/animes/#ID#/screenshots';
 
     /**
+     * World-art item url
+     *
+     * @var string
+     */
+    const WORLD_ART_URL = 'http://www.world-art.ru/animation/animation.php?id=#ID#';
+
+    /**
+     * MyAnimeList item url
+     *
+     * @var string
+     */
+    const MY_ANIME_LIST_URL = 'http://myanimelist.net/anime/#ID#';
+
+    /**
+     * AniDB item url
+     *
+     * @var string
+     */
+    const ANI_DB_URL = 'http://anidb.net/perl-bin/animedb.pl?show=anime&aid=#ID#';
+
+    /**
      * Browser
      *
      * @var \AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser
@@ -181,12 +202,13 @@ class Filler extends FillerPlugin
         $ep_num = $body['episodes_aired'] ? $body['episodes_aired'] : $body['episodes'];
         $item->setEpisodesNumber($ep_num.($body['ongoing'] ? '+' : ''));
 
-        // add source
+        // set main source
         $source = new Source();
         $source->setUrl($data['url']);
         $item->addSource($source);
 
         // set complex data
+        $this->setSources($item, $body);
         $this->setCover($item, $body);
         $this->setType($item, $body);
         $this->setNames($item, $body);
@@ -195,6 +217,37 @@ class Filler extends FillerPlugin
         if ($data['frames']) {
             $this->setImages($item, $body);
         }
+        return $item;
+    }
+
+    /**
+     * Set item sources
+     *
+     * @param \AnimeDb\Bundle\CatalogBundle\Entity\Item $item
+     * @param array $body
+     *
+     * @return \AnimeDb\Bundle\CatalogBundle\Entity\Item
+     */
+    public function setSources(Item $item, $body)
+    {
+        if (!empty($body['world_art_id'])) {
+            $source = new Source();
+            $source->setUrl(str_replace('#ID#', $body['world_art_id'], self::WORLD_ART_URL));
+            $item->addSource($source);
+        }
+
+        if (!empty($body['myanimelist_id'])) {
+            $source = new Source();
+            $source->setUrl(str_replace('#ID#', $body['myanimelist_id'], self::MY_ANIME_LIST_URL));
+            $item->addSource($source);
+        }
+
+        if (!empty($body['anidb_id'])) {
+            $source = new Source();
+            $source->setUrl(str_replace('#ID#', $body['anidb_id'], self::ANI_DB_URL));
+            $item->addSource($source);
+        }
+
         return $item;
     }
 
