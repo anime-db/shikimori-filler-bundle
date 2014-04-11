@@ -130,17 +130,17 @@ class Search extends SearchPlugin
             // set a name based on the locale
             if ($locale == 'ru' && $item['russian']) {
                 $name = $item['russian'];
-            } elseif ($locale == 'ja' && $item['japanese']) {
-                $name = $item['japanese'][0];
+                $description = $item['name'];
             } else {
                 $name = $item['name'];
+                $description = $item['russian'];
             }
 
             $body[$key] = new ItemSearch(
                 $name,
                 $this->getLinkForFill($this->browser->getHost().$item['url']),
                 $this->browser->getHost().$item['image']['original'],
-                $item['russian']
+                $description
             );
         }
         return $body;
