@@ -281,7 +281,7 @@ class Refiller extends RefillerPlugin
         // can refill from source. not need search
         if ($url) {
             return [
-                new ItemRefiller($item->getName(), ['url' => $url], $item->getCoverWebPath(), $item->getSummary())
+                new ItemRefiller($item->getName(), ['url' => $url], $item->getSummary())
             ];
         }
 
