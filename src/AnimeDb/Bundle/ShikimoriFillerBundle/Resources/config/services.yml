@@ -6,6 +6,7 @@ services:
             - { name: anime_db.search }
         calls:
             - [setRouter, ['@router']]
+            - [setRequest, ['@?request=']]
             - [setFiller, ['@anime_db.shikimori.filler']]
 
     anime_db.shikimori.filler:
