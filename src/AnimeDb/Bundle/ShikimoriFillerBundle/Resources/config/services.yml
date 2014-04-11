@@ -1,0 +1,24 @@
+services:
+    anime_db.shikimori.search:
+        class: AnimeDb\Bundle\ShikimoriFillerBundle\Service\Search
+        arguments: [ @anime_db.shikimori.browser ]
+        tags:
+            - { name: anime_db.search }
+        calls:
+            - [setRouter, ['@router']]
+            - [setFiller, ['@anime_db.shikimori.filler']]
+
+    anime_db.shikimori.filler:
+        class: AnimeDb\Bundle\ShikimoriFillerBundle\Service\Filler
+        arguments: [ @anime_db.shikimori.browser, @doctrine, @validator ]
+        tags:
+            - { name: anime_db.filler }
+        calls:
+            - [setRouter, ['@router']]
+            - [setRequest, ['@?request=']]
+
+    anime_db.shikimori.refiller:
+        class: AnimeDb\Bundle\ShikimoriFillerBundle\Service\Refiller
+        arguments: [ @anime_db.shikimori.browser, @anime_db.shikimori.filler, @anime_db.shikimori.search ]
+        tags:
+            - { name: anime_db.refiller }
