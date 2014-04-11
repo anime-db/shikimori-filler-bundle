@@ -242,9 +242,9 @@ class Filler extends FillerPlugin
             $item->addSource($source);
         }
 
-        if (!empty($body['anidb_id'])) {
+        if (!empty($body['ani_db_id'])) {
             $source = new Source();
-            $source->setUrl(str_replace('#ID#', $body['anidb_id'], self::ANI_DB_URL));
+            $source->setUrl(str_replace('#ID#', $body['ani_db_id'], self::ANI_DB_URL));
             $item->addSource($source);
         }
 
