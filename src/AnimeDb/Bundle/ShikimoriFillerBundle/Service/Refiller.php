@@ -151,7 +151,7 @@ class Refiller extends RefillerPlugin
                 break;
             }
         }
-        if (!$url && $field == self::FIELD_SOURCES) {
+        if (!$url) {
             return $item;
         }
 
@@ -177,13 +177,49 @@ class Refiller extends RefillerPlugin
                 $item->setEpisodesNumber($ep_num.($body['ongoing'] ? '+' : ''));
                 break;
             case self::FIELD_GENRES:
-                $this->filler->setGenres($item, $body);
+                $new_item = $this->filler->setGenres(clone $item, $body);
+                /* @var $new_genre \AnimeDb\Bundle\CatalogBundle\Entity\Genre */
+                foreach ($new_item->getGenres() as $new_genre) {
+                    // check of the existence of the genre
+                    /* @var $genre \AnimeDb\Bundle\CatalogBundle\Entity\Genre */
+                    foreach ($item->getGenres() as $genre) {
+                        if ($new_genre->getName() == $genre->getName()) {
+                            continue 2;
+                        }
+                    }
+                    $item->addGenre($new_genre);
+                }
                 break;
             case self::FIELD_IMAGES:
                 $this->filler->setImages($item, $body);
                 break;
             case self::FIELD_NAMES:
-                $this->filler->setNames($item, $body);
+                $new_item = $this->filler->setNames(clone $item, $body);
+                /* @var $new_name \AnimeDb\Bundle\CatalogBundle\Entity\Name */
+                foreach ($new_item->getNames() as $new_name) {
+                    // check of the existence of the name
+                    /* @var $name \AnimeDb\Bundle\CatalogBundle\Entity\Name */
+                    foreach ($item->getNames() as $name) {
+                        if ($new_name->getName() == $name->getName()) {
+                            continue 2;
+                        }
+                    }
+                    $item->addName($new_name);
+                }
+                break;
+            case self::FIELD_SOURCES:
+                $new_item = $this->filler->setSources(clone $item, $body);
+                /* @var $new_source \AnimeDb\Bundle\CatalogBundle\Entity\Source */
+                foreach ($new_item->getSources() as $new_source) {
+                    // check of the existence of the source
+                    /* @var $source \AnimeDb\Bundle\CatalogBundle\Entity\Source */
+                    foreach ($item->getSources() as $source) {
+                        if ($new_source->getUrl() == $source->getUrl()) {
+                            continue 2;
+                        }
+                    }
+                    $item->addSource($new_source);
+                }
                 break;
             case self::FIELD_STUDIO:
                 $this->filler->setStudio($item, $body);
