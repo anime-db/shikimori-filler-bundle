@@ -16,6 +16,7 @@ use AnimeDb\Bundle\CatalogBundle\Plugin\Fill\Refiller\Item as ItemRefiller;
 use AnimeDb\Bundle\CatalogBundle\Entity\Item;
 use AnimeDb\Bundle\CatalogBundle\Entity\Source;
 use AnimeDb\Bundle\CatalogBundle\Entity\Image;
+use AnimeDb\Bundle\CatalogBundle\Entity\Name;
 
 /**
  * Refiller from site world-art.ru
@@ -177,13 +178,13 @@ class Refiller extends RefillerPlugin
                 $item->setEpisodesNumber($ep_num.($body['ongoing'] ? '+' : ''));
                 break;
             case self::FIELD_GENRES:
-                $new_item = $this->filler->setGenres(clone $item, $body);
+                $new_item = $this->filler->setGenres(new Item(), $body);
                 /* @var $new_genre \AnimeDb\Bundle\CatalogBundle\Entity\Genre */
                 foreach ($new_item->getGenres() as $new_genre) {
                     // check of the existence of the genre
                     /* @var $genre \AnimeDb\Bundle\CatalogBundle\Entity\Genre */
                     foreach ($item->getGenres() as $genre) {
-                        if ($new_genre->getName() == $genre->getName()) {
+                        if ($new_genre->getId() == $genre->getId()) {
                             continue 2;
                         }
                     }
@@ -194,9 +195,11 @@ class Refiller extends RefillerPlugin
                 $this->filler->setImages($item, $body);
                 break;
             case self::FIELD_NAMES:
-                $new_item = $this->filler->setNames(clone $item, $body);
+                $new_item = $this->filler->setNames(new Item(), $body);
+                // set main name in top of names list
+                $names = array_merge([(new Name)->setName($new_item->getName())], $new_item->getNames()->toArray());
                 /* @var $new_name \AnimeDb\Bundle\CatalogBundle\Entity\Name */
-                foreach ($new_item->getNames() as $new_name) {
+                foreach ($names as $new_name) {
                     // check of the existence of the name
                     /* @var $name \AnimeDb\Bundle\CatalogBundle\Entity\Name */
                     foreach ($item->getNames() as $name) {
@@ -208,7 +211,7 @@ class Refiller extends RefillerPlugin
                 }
                 break;
             case self::FIELD_SOURCES:
-                $new_item = $this->filler->setSources(clone $item, $body);
+                $new_item = $this->filler->setSources(new Item(), $body);
                 /* @var $new_source \AnimeDb\Bundle\CatalogBundle\Entity\Source */
                 foreach ($new_item->getSources() as $new_source) {
                     // check of the existence of the source
