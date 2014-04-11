@@ -267,7 +267,7 @@ class Filler extends FillerPlugin
             if ($locale == 'ru' && $body['russian']) {
                 $names = array_merge([$body['name']], $body['english'], $body['japanese'], $body['synonyms']);
                 $item->setName($body['russian']);
-            } elseif ($locale == 'js' && $body['japanese']) {
+            } elseif ($locale == 'ja' && $body['japanese']) {
                 $item->setName(array_shift($body['japanese']));
                 $names = array_merge([$body['name']], [$body['russian']], $body['english'], $body['japanese'], $body['synonyms']);
             }
