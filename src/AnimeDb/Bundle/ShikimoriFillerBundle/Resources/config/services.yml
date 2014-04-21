@@ -24,4 +24,4 @@ services:
 
     anime_db.shikimori.search_form:
         class: AnimeDb\Bundle\ShikimoriFillerBundle\Form\Search
-        arguments: [ @anime_db.shikimori.browser ]
+        arguments: [ @anime_db.shikimori.browser, %locale% ]

@@ -11,6 +11,7 @@
 namespace AnimeDb\Bundle\ShikimoriFillerBundle\Form;
 
 use AnimeDb\Bundle\CatalogBundle\Form\Plugin\Search as SearchPlugin;
+use AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
@@ -22,6 +23,46 @@ use Symfony\Component\Form\FormBuilderInterface;
  */
 class Search extends SearchPlugin
 {
+
+    /**
+     * Browser
+     *
+     * @var \AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser
+     */
+    private $browser;
+
+    /**
+     * Locale
+     *
+     * @var string
+     */
+    protected $locale;
+
+    /**
+     * Types
+     *
+     * @var array
+     */
+    protected $types = [
+        'Movie',
+        'Music',
+        'ONA',
+        'OVA',
+        'Special',
+        'TV'
+    ];
+
+    /**
+     * Construct
+     *
+     * @param \AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser $browser
+     * @param string $locale
+     */
+    public function __construct(Browser $browser, $locale) {
+        $this->browser = $browser;
+        $this->locale = $locale;
+    }
+
     /**
      * (non-PHPdoc)
      * @see \Symfony\Component\Form\AbstractType::buildForm()
@@ -29,5 +70,27 @@ class Search extends SearchPlugin
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
+
+        // get genres
+        $list = $this->browser->get('/genres');
+        $genres = [];
+        while ($genre = array_shift($list)) {
+            if ($this->locale == 'ru') {
+                $genres[$genre['id']] = $genre['russian'];
+            } else {
+                $genres[$genre['id']] = $genre['name'];
+            }
+        }
+
+        $builder
+            ->add('genres', 'choice', [
+                'choices'  => $genres,
+                'multiple' => true,
+                'expanded' => true,
+                'required' => false
+            ])
+            ->add('type', 'choice', [
+                'choices'  => $this->types,
+            ]);
     }
 }
