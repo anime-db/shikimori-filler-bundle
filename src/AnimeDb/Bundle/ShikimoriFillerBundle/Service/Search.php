@@ -44,7 +44,7 @@ class Search extends SearchPlugin
      *
      * @var string
      */
-    const SEARH_URL = '/animes?limit=#LIMIT#&search=#NAME#';
+    const SEARH_URL = '/animes?limit=#LIMIT#&search=#NAME#&genre=#GENRE#&type=#TYPE#';
 
     /**
      * Limit the search results list
@@ -123,6 +123,8 @@ class Search extends SearchPlugin
     {
         $path = str_replace('#NAME#', urlencode($data['name']), self::SEARH_URL);
         $path = str_replace('#LIMIT#', self::DEFAULT_LIMIT, $path);
+        $path = str_replace('#GENRE#', $data['genre'], $path);
+        $path = str_replace('#TYPE#', $data['type'], $path);
         $body = $this->browser->get($path);
 
         // build list

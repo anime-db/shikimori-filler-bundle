@@ -88,7 +88,7 @@ class Search extends SearchPlugin
                 'required' => false
             ])
             ->add('type', 'choice', [
-                'choices'  => $this->types,
+                'choices'  => array_combine($this->types, $this->types),
                 'required' => false,
             ]);
     }
