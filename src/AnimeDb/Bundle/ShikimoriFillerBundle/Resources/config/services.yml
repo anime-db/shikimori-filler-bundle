@@ -1,7 +1,7 @@
 services:
     anime_db.shikimori.search:
         class: AnimeDb\Bundle\ShikimoriFillerBundle\Service\Search
-        arguments: [ @anime_db.shikimori.browser, %locale% ]
+        arguments: [ @anime_db.shikimori.browser, @anime_db.shikimori.search_form, %locale% ]
         tags:
             - { name: anime_db.search }
         calls:
@@ -21,3 +21,7 @@ services:
         arguments: [ @anime_db.shikimori.browser, @anime_db.shikimori.filler, @anime_db.shikimori.search ]
         tags:
             - { name: anime_db.refiller }
+
+    anime_db.shikimori.search_form:
+        class: AnimeDb\Bundle\ShikimoriFillerBundle\Form\Search
+        arguments: [ @anime_db.shikimori.browser ]
