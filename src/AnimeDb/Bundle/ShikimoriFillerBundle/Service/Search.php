@@ -14,7 +14,6 @@ use AnimeDb\Bundle\CatalogBundle\Plugin\Fill\Search\Search as SearchPlugin;
 use AnimeDb\Bundle\CatalogBundle\Plugin\Fill\Search\Item as ItemSearch;
 use AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser;
 use Symfony\Component\HttpFoundation\Request;
-use AnimeDb\Bundle\AppBundle\Service\Assets;
 use AnimeDb\Bundle\ShikimoriFillerBundle\Form\Search as SearchForm;
 
 /**
@@ -76,24 +75,15 @@ class Search extends SearchPlugin
     protected $form;
 
     /**
-     * Assets
-     *
-     * @var \AnimeDb\Bundle\AppBundle\Service\Assets
-     */
-    protected $assets;
-
-    /**
      * Construct
      *
      * @param \AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser $browser
      * @param \AnimeDb\Bundle\ShikimoriFillerBundle\Form\Search $form
-     * @param \AnimeDb\Bundle\AppBundle\Service\Assets $assets
      * @param string $locale
      */
-    public function __construct(Browser $browser, SearchForm $form, Assets $assets, $locale) {
+    public function __construct(Browser $browser, SearchForm $form, $locale) {
         $this->browser = $browser;
         $this->locale = $locale;
-        $this->assets = $assets;
         $this->form = $form;
     }
 
@@ -163,9 +153,6 @@ class Search extends SearchPlugin
      */
     public function getForm()
     {
-        // add style
-        $this->assets->addStylesheetPath('/bundles/animedbshikimorifiller/css/form.css');
-
         return $this->form;
     }
 }

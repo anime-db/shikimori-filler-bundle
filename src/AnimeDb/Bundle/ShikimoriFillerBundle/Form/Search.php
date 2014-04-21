@@ -83,14 +83,13 @@ class Search extends SearchPlugin
         }
 
         $builder
-            ->add('genres', 'choice', [
+            ->add('genre', 'choice', [
                 'choices'  => $genres,
-                'multiple' => true,
-                'expanded' => true,
                 'required' => false
             ])
             ->add('type', 'choice', [
                 'choices'  => $this->types,
+                'required' => false,
             ]);
     }
 }
