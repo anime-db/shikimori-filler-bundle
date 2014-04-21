@@ -70,6 +70,7 @@ class Search extends SearchPlugin
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
+        $builder->get('name')->setRequired(false);
 
         // get genres
         $list = $this->browser->get('/genres');
