@@ -60,19 +60,21 @@ class Search extends SearchPlugin
     private $browser;
 
     /**
-     * Request
+     * Locale
      *
-     * @var \Symfony\Component\HttpFoundation\Request
+     * @var string
      */
-    protected $request;
+    protected $locale;
 
     /**
      * Construct
      *
      * @param \AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser $browser
+     * @param string $locale
      */
-    public function __construct(Browser $browser) {
+    public function __construct(Browser $browser, $locale) {
         $this->browser = $browser;
+        $this->locale = $locale;
     }
 
     /**
@@ -91,16 +93,6 @@ class Search extends SearchPlugin
      */
     public function getTitle() {
         return self::TITLE;
-    }
-
-    /**
-     * Set request
-     *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     */
-    public function setRequest(Request $request = null)
-    {
-        $this->request = $request;
     }
 
     /**
@@ -123,12 +115,10 @@ class Search extends SearchPlugin
         $path = str_replace('#LIMIT#', self::DEFAULT_LIMIT, $path);
         $body = $this->browser->get($path);
 
-        $locale = $this->request ? substr($this->request->getLocale(), 0, 2) : 'en';
-
         // build list
         foreach ($body as $key => $item) {
             // set a name based on the locale
-            if ($locale == 'ru' && $item['russian']) {
+            if ($this->locale == 'ru' && $item['russian']) {
                 $name = $item['russian'];
                 $description = $item['name'];
             } else {
