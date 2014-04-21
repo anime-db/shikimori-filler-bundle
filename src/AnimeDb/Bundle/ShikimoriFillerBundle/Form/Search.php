@@ -89,7 +89,12 @@ class Search extends SearchPlugin
             ])
             ->add('type', 'choice', [
                 'choices'  => array_combine($this->types, $this->types),
+                'required' => false
+            ])
+            ->add('season', 'text', [
                 'required' => false,
+                'label' => 'Year of the premier',
+                'help' => 'You can select the period of the years indicated by a dash: 2002-2004'
             ]);
     }
 }
