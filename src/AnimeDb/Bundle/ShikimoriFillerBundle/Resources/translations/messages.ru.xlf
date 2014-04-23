@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="1">
+                <source>Movie</source>
+                <target>Полнометражное</target>
+            </trans-unit>
+            <trans-unit id="2">
+                <source>Music</source>
+                <target>Клип</target>
+            </trans-unit>
+            <trans-unit id="3">
+                <source>Special</source>
+                <target>Спешиал</target>
+            </trans-unit>
+            <trans-unit id="4">
+                <source>TV</source>
+                <target>Сериал</target>
+            </trans-unit>
+            <trans-unit id="5">
+                <source>Year of the premier</source>
+                <target>Год премьеры</target>
+            </trans-unit>
+            <trans-unit id="6">
+                <source>You can select the period of the years indicated by a dash: 2002-2004</source>
+                <target>Можно выбрать период указав годы через тире: 2002-2004</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

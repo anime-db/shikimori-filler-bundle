@@ -14,6 +14,7 @@ use AnimeDb\Bundle\CatalogBundle\Plugin\Fill\Search\Search as SearchPlugin;
 use AnimeDb\Bundle\CatalogBundle\Plugin\Fill\Search\Item as ItemSearch;
 use AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser;
 use Symfony\Component\HttpFoundation\Request;
+use AnimeDb\Bundle\ShikimoriFillerBundle\Form\Search as SearchForm;
 
 /**
  * Search from site shikimori.org
@@ -43,7 +44,7 @@ class Search extends SearchPlugin
      *
      * @var string
      */
-    const SEARH_URL = '/animes?limit=#LIMIT#&search=#NAME#';
+    const SEARH_URL = '/animes?limit=#LIMIT#&search=#NAME#&genre=#GENRE#&type=#TYPE#&season=#SEASON#';
 
     /**
      * Limit the search results list
@@ -60,19 +61,30 @@ class Search extends SearchPlugin
     private $browser;
 
     /**
-     * Request
+     * Locale
      *
-     * @var \Symfony\Component\HttpFoundation\Request
+     * @var string
      */
-    protected $request;
+    protected $locale;
+
+    /**
+     * Search form
+     *
+     * @var string
+     */
+    protected $form;
 
     /**
      * Construct
      *
      * @param \AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser $browser
+     * @param \AnimeDb\Bundle\ShikimoriFillerBundle\Form\Search $form
+     * @param string $locale
      */
-    public function __construct(Browser $browser) {
+    public function __construct(Browser $browser, SearchForm $form, $locale) {
         $this->browser = $browser;
+        $this->locale = $locale;
+        $this->form = $form;
     }
 
     /**
@@ -94,16 +106,6 @@ class Search extends SearchPlugin
     }
 
     /**
-     * Set request
-     *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     */
-    public function setRequest(Request $request = null)
-    {
-        $this->request = $request;
-    }
-
-    /**
      * Search source by name
      *
      * Return structure
@@ -121,14 +123,15 @@ class Search extends SearchPlugin
     {
         $path = str_replace('#NAME#', urlencode($data['name']), self::SEARH_URL);
         $path = str_replace('#LIMIT#', self::DEFAULT_LIMIT, $path);
+        $path = str_replace('#GENRE#', $data['genre'], $path);
+        $path = str_replace('#TYPE#', $data['type'], $path);
+        $path = str_replace('#SEASON#', str_replace('-', '_', $data['season']), $path);
         $body = $this->browser->get($path);
-
-        $locale = $this->request ? substr($this->request->getLocale(), 0, 2) : 'en';
 
         // build list
         foreach ($body as $key => $item) {
             // set a name based on the locale
-            if ($locale == 'ru' && $item['russian']) {
+            if ($this->locale == 'ru' && $item['russian']) {
                 $name = $item['russian'];
                 $description = $item['name'];
             } else {
@@ -144,5 +147,15 @@ class Search extends SearchPlugin
             );
         }
         return $body;
+    }
+
+    /**
+     * Get form
+     *
+     * @return \AnimeDb\Bundle\ShikimoriFillerBundle\Form\Search
+     */
+    public function getForm()
+    {
+        return $this->form;
     }
 }

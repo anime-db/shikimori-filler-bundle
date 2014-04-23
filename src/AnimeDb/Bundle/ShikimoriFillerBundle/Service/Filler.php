@@ -113,11 +113,11 @@ class Filler extends FillerPlugin
     private $validator;
 
     /**
-     * Request
+     * Locale
      *
-     * @var \Symfony\Component\HttpFoundation\Request
+     * @var string
      */
-    protected $request;
+    protected $locale;
 
     /**
      * Construct
@@ -125,15 +125,18 @@ class Filler extends FillerPlugin
      * @param \AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser $browser
      * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine
      * @param \Symfony\Component\Validator\Validator $validator
+     * @param string $locale
      */
     public function __construct(
         Browser $browser,
         Registry $doctrine,
-        Validator $validator
+        Validator $validator,
+        $locale
     ) {
         $this->browser = $browser;
         $this->doctrine = $doctrine;
         $this->validator = $validator;
+        $this->locale = $locale;
     }
 
     /**
@@ -152,16 +155,6 @@ class Filler extends FillerPlugin
      */
     public function getTitle() {
         return self::TITLE;
-    }
-
-    /**
-     * Set request
-     *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     */
-    public function setRequest(Request $request = null)
-    {
-        $this->request = $request;
     }
 
     /**
@@ -262,15 +255,12 @@ class Filler extends FillerPlugin
     public function setNames(Item $item, $body)
     {
         // set a name based on the locale
-        if ($this->request instanceof Request) {
-            $locale = substr($this->request->getLocale(), 0, 2);
-            if ($locale == 'ru' && $body['russian']) {
-                $names = array_merge([$body['name']], $body['english'], $body['japanese'], $body['synonyms']);
-                $item->setName($body['russian']);
-            } elseif ($locale == 'ja' && $body['japanese']) {
-                $item->setName(array_shift($body['japanese']));
-                $names = array_merge([$body['name']], [$body['russian']], $body['english'], $body['japanese'], $body['synonyms']);
-            }
+        if ($this->locale == 'ru' && $body['russian']) {
+            $names = array_merge([$body['name']], $body['english'], $body['japanese'], $body['synonyms']);
+            $item->setName($body['russian']);
+        } elseif ($this->locale == 'ja' && $body['japanese']) {
+            $item->setName(array_shift($body['japanese']));
+            $names = array_merge([$body['name']], [$body['russian']], $body['english'], $body['japanese'], $body['synonyms']);
         }
 
         // default list names
