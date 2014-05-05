@@ -123,9 +123,9 @@ class Search extends SearchPlugin
     {
         $path = str_replace('#NAME#', urlencode($data['name']), self::SEARH_URL);
         $path = str_replace('#LIMIT#', self::DEFAULT_LIMIT, $path);
-        $path = str_replace('#GENRE#', $data['genre'], $path);
-        $path = str_replace('#TYPE#', $data['type'], $path);
-        $path = str_replace('#SEASON#', str_replace('-', '_', $data['season']), $path);
+        $path = str_replace('#GENRE#', (isset($data['genre']) ? $data['genre'] : ''), $path);
+        $path = str_replace('#TYPE#', (isset($data['type']) ? $data['type'] : ''), $path);
+        $path = str_replace('#SEASON#', (isset($data['season']) ? str_replace('-', '_', $data['season']) : ''), $path);
         $body = $this->browser->get($path);
 
         // build list
