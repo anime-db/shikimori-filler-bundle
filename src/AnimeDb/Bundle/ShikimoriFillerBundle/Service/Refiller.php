@@ -19,10 +19,10 @@ use AnimeDb\Bundle\CatalogBundle\Entity\Image;
 use AnimeDb\Bundle\CatalogBundle\Entity\Name;
 
 /**
- * Refiller from site world-art.ru
+ * Refiller from site shikimori.org
  * 
- * @link http://world-art.ru/
- * @package AnimeDb\Bundle\WorldArtFillerBundle\Service
+ * @link http://shikimori.org/
+ * @package AnimeDb\Bundle\ShikimoriFillerBundle\Service
  * @author  Peter Gribanov <info@peter-gribanov.ru>
  */
 class Refiller extends RefillerPlugin
