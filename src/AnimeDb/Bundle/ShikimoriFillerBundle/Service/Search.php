@@ -15,6 +15,7 @@ use AnimeDb\Bundle\CatalogBundle\Plugin\Fill\Search\Item as ItemSearch;
 use AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser;
 use Symfony\Component\HttpFoundation\Request;
 use AnimeDb\Bundle\ShikimoriFillerBundle\Form\Search as SearchForm;
+use Knp\Menu\ItemInterface;
 
 /**
  * Search from site shikimori.org
@@ -103,6 +104,21 @@ class Search extends SearchPlugin
      */
     public function getTitle() {
         return self::TITLE;
+    }
+
+    /**
+     * Build menu for plugin
+     *
+     * @param \Knp\Menu\ItemInterface $item
+     *
+     * @return \Knp\Menu\ItemInterface
+     */
+    public function buildMenu(ItemInterface $item)
+    {
+        $item->addChild($this->getTitle(), [
+            'route' => 'fill_filler',
+            'routeParameters' => ['plugin' => $this->getName()]
+        ])->setLinkAttribute('class', 'icon-label icon-label-plugin-shikimori');
     }
 
     /**
