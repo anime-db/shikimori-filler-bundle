@@ -1,0 +1,6 @@
+assetic:
+    bundles: [ AnimeDbShikimoriFillerBundle ]
+    assets:
+        stylesheets:
+            inputs:
+                - @AnimeDbShikimoriFillerBundle/Resources/public/css/plugin.css
