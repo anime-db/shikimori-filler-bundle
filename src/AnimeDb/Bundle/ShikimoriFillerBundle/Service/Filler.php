@@ -23,6 +23,7 @@ use AnimeDb\Bundle\CatalogBundle\Entity\Studio;
 use AnimeDb\Bundle\CatalogBundle\Entity\Image;
 use AnimeDb\Bundle\AppBundle\Entity\Field\Image as ImageField;
 use AnimeDb\Bundle\ShikimoriFillerBundle\Form\Filler as FillerForm;
+use Knp\Menu\ItemInterface;
 
 /**
  * Search from site shikimori.org
@@ -163,6 +164,21 @@ class Filler extends FillerPlugin
     public function getForm()
     {
         return new FillerForm($this->browser->getHost());
+    }
+
+    /**
+     * Build menu for plugin
+     *
+     * @param \Knp\Menu\ItemInterface $item
+     *
+     * @return \Knp\Menu\ItemInterface
+     */
+    public function buildMenu(ItemInterface $item)
+    {
+        $item->addChild($this->getTitle(), [
+            'route' => 'fill_filler',
+            'routeParameters' => ['plugin' => $this->getName()]
+        ])->setLinkAttribute('class', 'icon-label icon-label-plugin-shikimori');
     }
 
     /**
