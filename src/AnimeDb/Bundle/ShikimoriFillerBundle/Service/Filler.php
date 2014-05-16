@@ -175,10 +175,8 @@ class Filler extends FillerPlugin
      */
     public function buildMenu(ItemInterface $item)
     {
-        $item->addChild($this->getTitle(), [
-            'route' => 'fill_filler',
-            'routeParameters' => ['plugin' => $this->getName()]
-        ])->setLinkAttribute('class', 'icon-label icon-label-plugin-shikimori');
+        return parent::buildMenu($item)
+            ->setLinkAttribute('class', 'icon-label icon-label-plugin-shikimori');
     }
 
     /**
