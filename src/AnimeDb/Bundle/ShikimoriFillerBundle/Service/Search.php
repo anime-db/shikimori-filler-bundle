@@ -157,7 +157,8 @@ class Search extends SearchPlugin
                 $name,
                 $this->getLinkForFill($this->browser->getHost().$item['url']),
                 $this->browser->getHost().$item['image']['original'],
-                $description
+                $description,
+                $this->browser->getHost().$item['url']
             );
         }
         return $body;
