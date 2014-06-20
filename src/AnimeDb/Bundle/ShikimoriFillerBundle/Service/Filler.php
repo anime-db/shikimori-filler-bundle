@@ -219,7 +219,7 @@ class Filler extends FillerPlugin
         $this->setNames($item, $body);
         $this->setGenres($item, $body);
         $this->setStudio($item, $body);
-        if ($data['frames']) {
+        if (!empty($data['frames'])) {
             $this->setImages($item, $body);
         }
         return $item;
