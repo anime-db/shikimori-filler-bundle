@@ -5,6 +5,7 @@
 [![Build Status](https://travis-ci.org/anime-db/shikimori-filler-bundle.png)](https://travis-ci.org/anime-db/shikimori-filler-bundle)
 [![Total Downloads](https://poser.pugx.org/anime-db/shikimori-filler-bundle/downloads.png)](https://packagist.org/packages/anime-db/shikimori-filler-bundle)
 [![License](https://poser.pugx.org/anime-db/shikimori-filler-bundle/license.png)](https://packagist.org/packages/anime-db/shikimori-filler-bundle)
+[![Code Coverage](https://scrutinizer-ci.com/g/anime-db/shikimori-filler-bundle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/anime-db/shikimori-filler-bundle/?branch=master)
 
 shikimori-filler-bundle
 =======================
