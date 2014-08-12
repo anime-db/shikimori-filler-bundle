@@ -182,7 +182,7 @@ class Filler extends FillerPlugin
     /**
      * Fill item from source
      *
-     * @param array $date
+     * @param array $data
      *
      * @return \AnimeDb\Bundle\CatalogBundle\Entity\Item|null
      */
