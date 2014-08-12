@@ -15,7 +15,6 @@ use AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser;
 use AnimeDb\Bundle\CatalogBundle\Plugin\Fill\Refiller\Item as ItemRefiller;
 use AnimeDb\Bundle\CatalogBundle\Entity\Item;
 use AnimeDb\Bundle\CatalogBundle\Entity\Source;
-use AnimeDb\Bundle\CatalogBundle\Entity\Image;
 use AnimeDb\Bundle\CatalogBundle\Entity\Name;
 
 /**
@@ -306,15 +305,17 @@ class Refiller extends RefillerPlugin
             $result = $this->search->search(['name' => $name]);
             /* @var $item \AnimeDb\Bundle\CatalogBundle\Plugin\Fill\Search\Item */
             foreach ($result as $key => $item) {
-                parse_str(parse_url($item->getLink(), PHP_URL_QUERY), $query);
-                $link = array_values($query)[0]['url'];
-                $result[$key] = new ItemRefiller(
-                    $item->getName(),
-                    ['url' => $link],
-                    $link,
-                    $item->getImage(),
-                    $item->getDescription()
-                );
+                if ($query = parse_url($item->getLink(), PHP_URL_QUERY)) {
+                    parse_str($query, $query);
+                    $link = array_values($query)[0]['url'];
+                    $result[$key] = new ItemRefiller(
+                        $item->getName(),
+                        ['url' => $link],
+                        $link,
+                        $item->getImage(),
+                        $item->getDescription()
+                    );
+                }
             }
         }
 

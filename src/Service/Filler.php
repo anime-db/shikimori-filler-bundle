@@ -13,7 +13,7 @@ namespace AnimeDb\Bundle\ShikimoriFillerBundle\Service;
 use AnimeDb\Bundle\CatalogBundle\Plugin\Fill\Filler\Filler as FillerPlugin;
 use AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser;
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Symfony\Component\Validator\Validator;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use AnimeDb\Bundle\CatalogBundle\Entity\Item;
 use AnimeDb\Bundle\CatalogBundle\Entity\Name;
 use AnimeDb\Bundle\CatalogBundle\Entity\Source;
@@ -107,7 +107,7 @@ class Filler extends FillerPlugin
     /**
      * Validator
      *
-     * @var \Symfony\Component\Validator\Validator
+     * @var \Symfony\Component\Validator\Validator\ValidatorInterface
      */
     private $validator;
 
@@ -123,13 +123,13 @@ class Filler extends FillerPlugin
      *
      * @param \AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser $browser
      * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine
-     * @param \Symfony\Component\Validator\Validator $validator
+     * @param \Symfony\Component\Validator\Validator\ValidatorInterface $validator
      * @param string $locale
      */
     public function __construct(
         Browser $browser,
         Registry $doctrine,
-        Validator $validator,
+        ValidatorInterface $validator,
         $locale
     ) {
         $this->browser = $browser;
@@ -182,7 +182,7 @@ class Filler extends FillerPlugin
     /**
      * Fill item from source
      *
-     * @param array $date
+     * @param array $data
      *
      * @return \AnimeDb\Bundle\CatalogBundle\Entity\Item|null
      */
@@ -266,6 +266,7 @@ class Filler extends FillerPlugin
      */
     public function setNames(Item $item, $body)
     {
+        $names = [];
         // set a name based on the locale
         if ($this->locale == 'ru' && $body['russian']) {
             $names = array_merge([$body['name']], $body['english'], $body['japanese'], $body['synonyms']);
@@ -302,10 +303,11 @@ class Filler extends FillerPlugin
     {
         if (!empty($body['image']) && !empty($body['image']['original'])) {
             try {
-                $ext = pathinfo(parse_url($body['image']['original'], PHP_URL_PATH), PATHINFO_EXTENSION);
-                $target = self::NAME.'/'.$body['id'].'/cover.'.$ext;
-                $item->setCover($this->uploadImage($this->browser->getHost().$body['image']['original'], $target));
-            } catch (\Exception $e) {}
+                if ($path = parse_url($body['image']['original'], PHP_URL_PATH)) {
+                    $target = self::NAME.'/'.$body['id'].'/cover.'.pathinfo($path, PATHINFO_EXTENSION);
+                    $item->setCover($this->uploadImage($this->browser->getHost().$body['image']['original'], $target));
+                }
+            } catch (\Exception $e) {} // error while retrieving images is not critical
         }
         return $item;
     }
@@ -402,12 +404,13 @@ class Filler extends FillerPlugin
     {
         $images = $this->browser->get(str_replace('#ID#', $body['id'], self::FILL_IMAGES_URL));
         foreach ($images as $image) {
-            $filename = pathinfo(parse_url($image['original'], PHP_URL_PATH), PATHINFO_BASENAME);
-            $target = self::NAME.'/'.$body['id'].'/'.$filename;
-            if ($path = $this->uploadImage($this->browser->getHost().$image['original'], $target)) {
-                $image = new Image();
-                $image->setSource($path);
-                $item->addImage($image);
+            if ($path = parse_url($image['original'], PHP_URL_PATH)) {
+                $target = self::NAME.'/'.$body['id'].'/'.pathinfo($path, PATHINFO_BASENAME);
+                if ($path = $this->uploadImage($this->browser->getHost().$image['original'], $target)) {
+                    $image = new Image();
+                    $image->setSource($path);
+                    $item->addImage($image);
+                }
             }
         }
         return $item;

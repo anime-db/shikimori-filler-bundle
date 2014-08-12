@@ -13,7 +13,6 @@ namespace AnimeDb\Bundle\ShikimoriFillerBundle\Service;
 use AnimeDb\Bundle\CatalogBundle\Plugin\Fill\Search\Search as SearchPlugin;
 use AnimeDb\Bundle\CatalogBundle\Plugin\Fill\Search\Item as ItemSearch;
 use AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser;
-use Symfony\Component\HttpFoundation\Request;
 use AnimeDb\Bundle\ShikimoriFillerBundle\Form\Search as SearchForm;
 use Knp\Menu\ItemInterface;
 
@@ -71,7 +70,7 @@ class Search extends SearchPlugin
     /**
      * Search form
      *
-     * @var string
+     * @var \AnimeDb\Bundle\ShikimoriFillerBundle\Form\Search
      */
     protected $form;
 
@@ -140,7 +139,7 @@ class Search extends SearchPlugin
         $path = str_replace('#GENRE#', (isset($data['genre']) ? $data['genre'] : ''), $path);
         $path = str_replace('#TYPE#', (isset($data['type']) ? $data['type'] : ''), $path);
         $path = str_replace('#SEASON#', (isset($data['season']) ? str_replace('-', '_', $data['season']) : ''), $path);
-        $body = $this->browser->get($path);
+        $body = (array)$this->browser->get($path);
 
         // build list
         foreach ($body as $key => $item) {
