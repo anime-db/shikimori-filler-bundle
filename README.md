@@ -1,4 +1,4 @@
-<img src="http://anime-db.org/bundles/animedboffsite/images/shikimori.org.png" /><br />
+![Filler for Shikimori.org](http://anime-db.org/bundles/animedboffsite/images/shikimori.org.png)
 
 [![Latest Stable Version](https://poser.pugx.org/anime-db/shikimori-filler-bundle/v/stable.png)](https://packagist.org/packages/anime-db/shikimori-filler-bundle)
 [![Latest Unstable Version](https://poser.pugx.org/anime-db/shikimori-filler-bundle/v/unstable.png)](https://packagist.org/packages/anime-db/shikimori-filler-bundle)
