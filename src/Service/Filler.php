@@ -266,6 +266,7 @@ class Filler extends FillerPlugin
      */
     public function setNames(Item $item, $body)
     {
+        $names = [];
         // set a name based on the locale
         if ($this->locale == 'ru' && $body['russian']) {
             $names = array_merge([$body['name']], $body['english'], $body['japanese'], $body['synonyms']);
@@ -302,10 +303,11 @@ class Filler extends FillerPlugin
     {
         if (!empty($body['image']) && !empty($body['image']['original'])) {
             try {
-                $ext = pathinfo(parse_url($body['image']['original'], PHP_URL_PATH), PATHINFO_EXTENSION);
-                $target = self::NAME.'/'.$body['id'].'/cover.'.$ext;
-                $item->setCover($this->uploadImage($this->browser->getHost().$body['image']['original'], $target));
-            } catch (\Exception $e) {}
+                if ($path = parse_url($body['image']['original'], PHP_URL_PATH)) {
+                    $target = self::NAME.'/'.$body['id'].'/cover.'.pathinfo($path, PATHINFO_EXTENSION);
+                    $item->setCover($this->uploadImage($this->browser->getHost().$body['image']['original'], $target));
+                }
+            } catch (\Exception $e) {} // error while retrieving images is not critical
         }
         return $item;
     }
@@ -402,12 +404,13 @@ class Filler extends FillerPlugin
     {
         $images = $this->browser->get(str_replace('#ID#', $body['id'], self::FILL_IMAGES_URL));
         foreach ($images as $image) {
-            $filename = pathinfo(parse_url($image['original'], PHP_URL_PATH), PATHINFO_BASENAME);
-            $target = self::NAME.'/'.$body['id'].'/'.$filename;
-            if ($path = $this->uploadImage($this->browser->getHost().$image['original'], $target)) {
-                $image = new Image();
-                $image->setSource($path);
-                $item->addImage($image);
+            if ($path = parse_url($image['original'], PHP_URL_PATH)) {
+                $target = self::NAME.'/'.$body['id'].'/'.pathinfo($path, PATHINFO_BASENAME);
+                if ($path = $this->uploadImage($this->browser->getHost().$image['original'], $target)) {
+                    $image = new Image();
+                    $image->setSource($path);
+                    $item->addImage($image);
+                }
             }
         }
         return $item;
