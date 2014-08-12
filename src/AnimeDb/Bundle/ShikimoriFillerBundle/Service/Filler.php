@@ -13,7 +13,7 @@ namespace AnimeDb\Bundle\ShikimoriFillerBundle\Service;
 use AnimeDb\Bundle\CatalogBundle\Plugin\Fill\Filler\Filler as FillerPlugin;
 use AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser;
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Symfony\Component\Validator\Validator;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use AnimeDb\Bundle\CatalogBundle\Entity\Item;
 use AnimeDb\Bundle\CatalogBundle\Entity\Name;
 use AnimeDb\Bundle\CatalogBundle\Entity\Source;
@@ -107,7 +107,7 @@ class Filler extends FillerPlugin
     /**
      * Validator
      *
-     * @var \Symfony\Component\Validator\Validator
+     * @var \Symfony\Component\Validator\Validator\ValidatorInterface
      */
     private $validator;
 
@@ -123,13 +123,13 @@ class Filler extends FillerPlugin
      *
      * @param \AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser $browser
      * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine
-     * @param \Symfony\Component\Validator\Validator $validator
+     * @param \Symfony\Component\Validator\Validator\ValidatorInterface $validator
      * @param string $locale
      */
     public function __construct(
         Browser $browser,
         Registry $doctrine,
-        Validator $validator,
+        ValidatorInterface $validator,
         $locale
     ) {
         $this->browser = $browser;
