@@ -176,7 +176,7 @@ class Filler extends FillerPlugin
     public function buildMenu(ItemInterface $item)
     {
         return parent::buildMenu($item)
-            ->setLinkAttribute('class', 'icon-label icon-label-plugin-shikimori');
+            ->setLinkAttribute('class', 'icon-label icon-plugin-shikimori');
     }
 
     /**
