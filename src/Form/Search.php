@@ -10,7 +10,7 @@
 
 namespace AnimeDb\Bundle\ShikimoriFillerBundle\Form;
 
-use AnimeDb\Bundle\CatalogBundle\Form\Plugin\Search as SearchPlugin;
+use AnimeDb\Bundle\CatalogBundle\Form\Type\Plugin\Search as SearchPlugin;
 use AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser;
 use Symfony\Component\Form\FormBuilderInterface;
 
