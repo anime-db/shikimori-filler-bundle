@@ -10,7 +10,7 @@ services:
 
     anime_db.shikimori.filler:
         class: AnimeDb\Bundle\ShikimoriFillerBundle\Service\Filler
-        arguments: [ @anime_db.shikimori.browser, @doctrine, @validator, %locale% ]
+        arguments: [ @anime_db.shikimori.browser, @doctrine, @anime_db.downloader, %locale% ]
         tags:
             - { name: anime_db.filler }
         calls:
