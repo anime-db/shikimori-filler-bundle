@@ -21,7 +21,7 @@ use AnimeDb\Bundle\CatalogBundle\Entity\Genre;
 use AnimeDb\Bundle\CatalogBundle\Entity\Studio;
 use AnimeDb\Bundle\CatalogBundle\Entity\Image;
 use AnimeDb\Bundle\AppBundle\Entity\Field\Image as ImageField;
-use AnimeDb\Bundle\ShikimoriFillerBundle\Form\Filler as FillerForm;
+use AnimeDb\Bundle\ShikimoriFillerBundle\Form\Type\Filler as FillerForm;
 use Knp\Menu\ItemInterface;
 
 /**
@@ -158,7 +158,7 @@ class Filler extends FillerPlugin
     /**
      * Get form
      *
-     * @return \AnimeDb\Bundle\ShikimoriFillerBundle\Form\Filler
+     * @return \AnimeDb\Bundle\ShikimoriFillerBundle\Form\Type\Filler
      */
     public function getForm()
     {
