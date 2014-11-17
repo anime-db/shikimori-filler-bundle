@@ -13,14 +13,13 @@ namespace AnimeDb\Bundle\ShikimoriFillerBundle\Service;
 use AnimeDb\Bundle\CatalogBundle\Plugin\Fill\Filler\Filler as FillerPlugin;
 use AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser;
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use AnimeDb\Bundle\CatalogBundle\Entity\Item;
 use AnimeDb\Bundle\CatalogBundle\Entity\Name;
 use AnimeDb\Bundle\CatalogBundle\Entity\Source;
 use AnimeDb\Bundle\CatalogBundle\Entity\Genre;
 use AnimeDb\Bundle\CatalogBundle\Entity\Studio;
 use AnimeDb\Bundle\CatalogBundle\Entity\Image;
-use AnimeDb\Bundle\AppBundle\Entity\Field\Image as ImageField;
+use AnimeDb\Bundle\AppBundle\Service\Downloader;
 use AnimeDb\Bundle\ShikimoriFillerBundle\Form\Type\Filler as FillerForm;
 use Knp\Menu\ItemInterface;
 
@@ -104,11 +103,11 @@ class Filler extends FillerPlugin
     private $doctrine;
 
     /**
-     * Validator
+     * Downloader
      *
-     * @var \Symfony\Component\Validator\Validator\ValidatorInterface
+     * @var \AnimeDb\Bundle\AppBundle\Service\Downloader
      */
-    private $validator;
+    private $downloader;
 
     /**
      * Locale
@@ -122,18 +121,14 @@ class Filler extends FillerPlugin
      *
      * @param \AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser $browser
      * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine
-     * @param \Symfony\Component\Validator\Validator\ValidatorInterface $validator
+     * @param \AnimeDb\Bundle\AppBundle\Service\Downloader $downloader
      * @param string $locale
      */
-    public function __construct(
-        Browser $browser,
-        Registry $doctrine,
-        ValidatorInterface $validator,
-        $locale
-    ) {
+    public function __construct(Browser $browser, Registry $doctrine, Downloader $downloader, $locale)
+    {
         $this->browser = $browser;
         $this->doctrine = $doctrine;
-        $this->validator = $validator;
+        $this->downloader = $downloader;
         $this->locale = $locale;
     }
 
@@ -419,14 +414,12 @@ class Filler extends FillerPlugin
      * Upload image from url
      *
      * @param string $url
-     * @param string|null $target
+     * @param string $target
      *
      * @return string
      */
-    protected function uploadImage($url, $target = null) {
-        $image = new ImageField();
-        $image->setRemote($url);
-        $image->upload($this->validator, $target);
-        return $image->getPath();
+    protected function uploadImage($url, $target) {
+        $this->downloader->image($url, $target);
+        return $target;
     }
 }
