@@ -23,5 +23,5 @@ services:
             - { name: anime_db.refiller }
 
     anime_db.shikimori.search_form:
-        class: AnimeDb\Bundle\ShikimoriFillerBundle\Form\Search
+        class: AnimeDb\Bundle\ShikimoriFillerBundle\Form\Type\Search
         arguments: [ @anime_db.shikimori.browser, %locale% ]
