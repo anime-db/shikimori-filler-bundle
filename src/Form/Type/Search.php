@@ -8,7 +8,7 @@
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
 
-namespace AnimeDb\Bundle\ShikimoriFillerBundle\Form;
+namespace AnimeDb\Bundle\ShikimoriFillerBundle\Form\Type;
 
 use AnimeDb\Bundle\CatalogBundle\Form\Type\Plugin\Search as SearchPlugin;
 use AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser;
@@ -18,7 +18,7 @@ use Symfony\Component\Form\FormBuilderInterface;
  * Search from
  * 
  * @link http://shikimori.org/
- * @package AnimeDb\Bundle\ShikimoriFillerBundle\Form
+ * @package AnimeDb\Bundle\ShikimoriFillerBundle\Form\Type
  * @author  Peter Gribanov <info@peter-gribanov.ru>
  */
 class Search extends SearchPlugin

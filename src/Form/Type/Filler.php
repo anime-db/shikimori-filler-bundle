@@ -8,7 +8,7 @@
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
 
-namespace AnimeDb\Bundle\ShikimoriFillerBundle\Form;
+namespace AnimeDb\Bundle\ShikimoriFillerBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -16,7 +16,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 /**
  * Get item from filler
  *
- * @package AnimeDb\Bundle\ShikimoriFillerBundle\Form
+ * @package AnimeDb\Bundle\ShikimoriFillerBundle\Form\Type
  * @author  Peter Gribanov <info@peter-gribanov.ru>
  */
 class Filler extends AbstractType
