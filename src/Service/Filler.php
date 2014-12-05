@@ -420,9 +420,6 @@ class Filler extends FillerPlugin
      */
     protected function uploadImage($url, EntityInterface $entity)
     {
-        return $this->downloader->image(
-            $url,
-            $this->downloader->getRoot().$entity->getDownloadPath().'/'.$entity->getFilename()
-        );
+        return $this->downloader->image($url, $this->downloader->getRoot().$entity->getWebPath());
     }
 }
