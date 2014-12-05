@@ -12,6 +12,7 @@ namespace AnimeDb\Bundle\ShikimoriFillerBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
  * Get item from filler
@@ -57,6 +58,17 @@ class Filler extends AbstractType
                 'label' => 'Upload frames',
                 'required' => false
             ]);
+    }
+
+    /**
+     * (non-PHPdoc)
+     * @see Symfony\Component\Form.AbstractType::setDefaultOptions()
+     */
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults([
+            'csrf_protection' => false
+        ]);
     }
 
     /**

@@ -13,6 +13,7 @@ namespace AnimeDb\Bundle\ShikimoriFillerBundle\Form\Type;
 use AnimeDb\Bundle\CatalogBundle\Form\Type\Plugin\Search as SearchPlugin;
 use AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
  * Search from
@@ -97,5 +98,16 @@ class Search extends SearchPlugin
                 'label' => 'Year of the premier',
                 'help' => 'You can select the period of the years indicated by a dash: 2002-2004'
             ]);
+    }
+
+    /**
+     * (non-PHPdoc)
+     * @see Symfony\Component\Form.AbstractType::setDefaultOptions()
+     */
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults([
+            'csrf_protection' => false
+        ]);
     }
 }
