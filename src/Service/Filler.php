@@ -22,6 +22,7 @@ use AnimeDb\Bundle\CatalogBundle\Entity\Image;
 use AnimeDb\Bundle\AppBundle\Service\Downloader;
 use AnimeDb\Bundle\ShikimoriFillerBundle\Form\Type\Filler as FillerForm;
 use Knp\Menu\ItemInterface;
+use AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\EntityInterface;
 
 /**
  * Search from site shikimori.org
@@ -298,8 +299,8 @@ class Filler extends FillerPlugin
         if (!empty($body['image']) && !empty($body['image']['original'])) {
             try {
                 if ($path = parse_url($body['image']['original'], PHP_URL_PATH)) {
-                    $target = self::NAME.'/'.$body['id'].'/cover.'.pathinfo($path, PATHINFO_EXTENSION);
-                    $item->setCover($this->uploadImage($this->browser->getHost().$body['image']['original'], $target));
+                    $item->setCover(self::NAME.'/'.$body['id'].'/cover.'.pathinfo($path, PATHINFO_EXTENSION));
+                    $this->uploadImage($this->browser->getHost().$body['image']['original'], $item);
                 }
             } catch (\Exception $e) {} // error while retrieving images is not critical
         }
@@ -399,10 +400,9 @@ class Filler extends FillerPlugin
         $images = $this->browser->get(str_replace('#ID#', $body['id'], self::FILL_IMAGES_URL));
         foreach ($images as $image) {
             if ($path = parse_url($image['original'], PHP_URL_PATH)) {
-                $target = self::NAME.'/'.$body['id'].'/'.pathinfo($path, PATHINFO_BASENAME);
-                if ($path = $this->uploadImage($this->browser->getHost().$image['original'], $target)) {
-                    $image = new Image();
-                    $image->setSource($path);
+                $image = new Image();
+                $image->setSource(self::NAME.'/'.$body['id'].'/'.pathinfo($path, PATHINFO_BASENAME));
+                if ($this->uploadImage($this->browser->getHost().$image['original'], $image)) {
                     $item->addImage($image);
                 }
             }
@@ -414,12 +414,15 @@ class Filler extends FillerPlugin
      * Upload image from url
      *
      * @param string $url
-     * @param string $target
+     * @param \AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\EntityInterface $entity
      *
-     * @return string
+     * @return boolean
      */
-    protected function uploadImage($url, $target) {
-        $this->downloader->image($url, $target);
-        return $target;
+    protected function uploadImage($url, EntityInterface $entity)
+    {
+        return $this->downloader->image(
+            $url,
+            $this->downloader->getRoot().$entity->getDownloadPath().'/'.$entity->getFilename()
+        );
     }
 }
