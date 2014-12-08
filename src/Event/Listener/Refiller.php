@@ -90,6 +90,13 @@ class Refiller
             if (!$item->getStudio()) {
                 $item->setStudio($new_item->getStudio());
             }
+            if (!$item->getType()) {
+                $item->setType($new_item->getType());
+            }
+            if (!$item->getCover()) {
+                $item->setCover($new_item->getCover());
+            }
+
             foreach ($new_item->getGenres() as $genre) {
                 $item->addGenre($genre);
             }
