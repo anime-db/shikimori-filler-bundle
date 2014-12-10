@@ -13,6 +13,7 @@ namespace AnimeDb\Bundle\ShikimoriFillerBundle\Event\Listener;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use AnimeDb\Bundle\ShikimoriFillerBundle\Service\Refiller as RefillerService;
 use AnimeDb\Bundle\ShikimoriFillerBundle\Service\Filler;
+use AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser;
 use AnimeDb\Bundle\CatalogBundle\Event\Storage\AddNewItem;
 use AnimeDb\Bundle\CatalogBundle\Event\Storage\StoreEvents;
 use AnimeDb\Bundle\CatalogBundle\Entity\Name;
@@ -25,6 +26,13 @@ use AnimeDb\Bundle\CatalogBundle\Entity\Name;
  */
 class Refiller
 {
+    /**
+     * Dispatcher
+     *
+     * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+     */
+    protected $dispatcher;
+
     /**
      * Refiller
      *
@@ -40,11 +48,11 @@ class Refiller
     protected $filler;
 
     /**
-     * Dispatcher
+     * Browser
      *
-     * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+     * @var \AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser
      */
-    protected $dispatcher;
+    private $browser;
 
     /**
      * Construct
@@ -52,12 +60,18 @@ class Refiller
      * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
      * @param \AnimeDb\Bundle\ShikimoriFillerBundle\Service\Refiller $refiller
      * @param \AnimeDb\Bundle\ShikimoriFillerBundle\Service\Filler $filler
+     * @param \AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser $browser
      */
-    public function __construct(EventDispatcherInterface $dispatcher, RefillerService $refiller, Filler $filler)
-    {
+    public function __construct(
+        EventDispatcherInterface $dispatcher,
+        RefillerService $refiller,
+        Filler $filler,
+        Browser $browser
+    ) {
         $this->dispatcher = $dispatcher;
         $this->refiller = $refiller;
         $this->filler = $filler;
+        $this->browser = $browser;
     }
 
     /**
@@ -71,44 +85,42 @@ class Refiller
         if (!$event->getFillers()->contains($this->filler) && ($url = $this->refiller->getSourceForFill($item))) {
             $new_item = $this->filler->fill(['url' => $url]);
 
+            // get data
+            preg_match(Filler::REG_ITEM_ID, $url, $match);
+            $path = str_replace('#ID#', $match['id'], Filler::FILL_URL);
+            $body = $this->browser->get($path);
+
             // fill item
-            if (!$item->getDateEnd()) {
-                $item->setDateEnd($new_item->getDateEnd());
+            if (!$item->getDateEnd() && $body['released_on']) {
+                $item->setDateEnd(new \DateTime($body['released_on']));
             }
             if (!$item->getDatePremiere()) {
-                $item->setDatePremiere($new_item->getDatePremiere());
+                $item->setDatePremiere(new \DateTime($body['aired_on']));
             }
             if (!$item->getDuration()) {
-                $item->setDuration($new_item->getDuration());
+                $item->setDuration($body['duration']);
             }
             if (!$item->getEpisodesNumber()) {
-                $item->setEpisodesNumber($new_item->getEpisodesNumber());
+                $ep_num = $body['episodes_aired'] ? $body['episodes_aired'] : $body['episodes'];
+                $item->setEpisodesNumber($ep_num.($body['ongoing'] ? '+' : ''));
             }
             if (!$item->getSummary()) {
-                $item->setSummary($new_item->getSummary());
-            }
-            if (!$item->getStudio()) {
-                $item->setStudio($new_item->getStudio());
-            }
-            if (!$item->getType()) {
-                $item->setType($new_item->getType());
-            }
-            if (!$item->getCover()) {
-                $item->setCover($new_item->getCover());
+                $item->setSummary($body['description']);
             }
 
-            foreach ($new_item->getGenres() as $genre) {
-                $item->addGenre($genre);
+            // set complex data
+            if (!$item->getStudio()) {
+                $this->filler->setStudio($item, $body);
             }
-            // set main name in top of names list
-            $new_names = $new_item->getNames()->toArray();
-            array_unshift($new_names, (new Name())->setName($new_item->getName()));
-            foreach ($new_names as $new_name) {
-                $item->addName($new_name);
+            if (!$item->getType()) {
+                $this->filler->setType($item, $body);
             }
-            foreach ($new_item->getSources() as $source) {
-                $item->addSource($source);
+            if (!$item->getCover()) {
+                $this->filler->setCover($item, $body);
             }
+            $this->filler->setGenres($item, $body);
+            $this->filler->setSources($item, $body);
+            $this->filler->setNames($item, $body);
 
             $event->addFiller($this->filler);
             // resend event

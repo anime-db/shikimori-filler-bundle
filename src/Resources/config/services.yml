@@ -28,6 +28,10 @@ services:
 
     anime_db.shikimori.listener.refiller:
         class: AnimeDb\Bundle\ShikimoriFillerBundle\Event\Listener\Refiller
-        arguments: [ @event_dispatcher, @anime_db.shikimori.refiller, @anime_db.shikimori.filler ]
+        arguments:
+          - @event_dispatcher
+          - @anime_db.shikimori.refiller
+          - @anime_db.shikimori.filler
+          - @anime_db.shikimori.browser
         tags:
             - { name: kernel.event_listener, event: anime_db.storage.add_new_item, method: onAddNewItem }
