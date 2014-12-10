@@ -83,7 +83,6 @@ class Refiller
     {
         $item = $event->getItem();
         if (!$event->getFillers()->contains($this->filler) && ($url = $this->refiller->getSourceForFill($item))) {
-            $new_item = $this->filler->fill(['url' => $url]);
 
             // get data
             preg_match(Filler::REG_ITEM_ID, $url, $match);
