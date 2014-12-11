@@ -115,7 +115,7 @@ class Search extends SearchPlugin
     public function buildMenu(ItemInterface $item)
     {
         return parent::buildMenu($item)
-            ->setLinkAttribute('class', 'icon-label icon-plugin-shikimori');
+            ->setLinkAttribute('class', 'icon-label icon-label-plugin-shikimori');
     }
 
     /**
