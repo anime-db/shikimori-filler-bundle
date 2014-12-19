@@ -121,16 +121,7 @@ class Refiller extends RefillerPlugin
      */
     public function isCanRefill(Item $item, $field)
     {
-        if (!in_array($field, $this->supported_fields)) {
-            return false;
-        }
-        /* @var $source \AnimeDb\Bundle\CatalogBundle\Entity\Source */
-        foreach ($item->getSources() as $source) {
-            if (strpos($source->getUrl(), $this->browser->getHost()) === 0) {
-                return true;
-            }
-        }
-        return false;
+        return in_array($field, $this->supported_fields) && $this->getSourceForFill($item);
     }
 
     /**
@@ -143,15 +134,7 @@ class Refiller extends RefillerPlugin
      */
     public function refill(Item $item, $field)
     {
-        // get source url
-        $url = '';
-        foreach ($item->getSources() as $source) {
-            if (strpos($source->getUrl(), $this->browser->getHost()) === 0) {
-                $url = $source->getUrl();
-                break;
-            }
-        }
-        if (!$url) {
+        if (!($url = $this->getSourceForFill($item))) {
             return $item;
         }
 
@@ -178,15 +161,7 @@ class Refiller extends RefillerPlugin
                 break;
             case self::FIELD_GENRES:
                 $new_item = $this->filler->setGenres(new Item(), $body);
-                /* @var $new_genre \AnimeDb\Bundle\CatalogBundle\Entity\Genre */
                 foreach ($new_item->getGenres() as $new_genre) {
-                    // check of the existence of the genre
-                    /* @var $genre \AnimeDb\Bundle\CatalogBundle\Entity\Genre */
-                    foreach ($item->getGenres() as $genre) {
-                        if ($new_genre->getId() == $genre->getId()) {
-                            continue 2;
-                        }
-                    }
                     $item->addGenre($new_genre);
                 }
                 break;
@@ -196,30 +171,15 @@ class Refiller extends RefillerPlugin
             case self::FIELD_NAMES:
                 $new_item = $this->filler->setNames(new Item(), $body);
                 // set main name in top of names list
-                $names = array_merge([(new Name)->setName($new_item->getName())], $new_item->getNames()->toArray());
-                /* @var $new_name \AnimeDb\Bundle\CatalogBundle\Entity\Name */
+                $names = $new_item->getNames()->toArray();
+                array_unshift($names, (new Name())->setName($new_item->getName()));
                 foreach ($names as $new_name) {
-                    // check of the existence of the name
-                    /* @var $name \AnimeDb\Bundle\CatalogBundle\Entity\Name */
-                    foreach ($item->getNames() as $name) {
-                        if ($new_name->getName() == $name->getName()) {
-                            continue 2;
-                        }
-                    }
                     $item->addName($new_name);
                 }
                 break;
             case self::FIELD_SOURCES:
                 $new_item = $this->filler->setSources(new Item(), $body);
-                /* @var $new_source \AnimeDb\Bundle\CatalogBundle\Entity\Source */
                 foreach ($new_item->getSources() as $new_source) {
-                    // check of the existence of the source
-                    /* @var $source \AnimeDb\Bundle\CatalogBundle\Entity\Source */
-                    foreach ($item->getSources() as $source) {
-                        if ($new_source->getUrl() == $source->getUrl()) {
-                            continue 2;
-                        }
-                    }
                     $item->addSource($new_source);
                 }
                 break;
@@ -269,16 +229,8 @@ class Refiller extends RefillerPlugin
      */
     public function search(Item $item, $field)
     {
-        // search source url
-        $url = '';
-        foreach ($item->getSources() as $source) {
-            if (strpos($source->getUrl(), $this->browser->getHost()) === 0) {
-                $url = $source->getUrl();
-                break;
-            }
-        }
         // can refill from source. not need search
-        if ($url) {
+        if ($url = $this->getSourceForFill($item)) {
             return [
                 new ItemRefiller(
                     $item->getName(),
@@ -334,11 +286,27 @@ class Refiller extends RefillerPlugin
     public function refillFromSearchResult(Item $item, $field, array $data)
     {
         if (!empty($data['url'])) {
-            $source = new Source();
-            $source->setUrl($data['url']);
-            $item->addSource($source);
+            $item->addSource((new Source())->setUrl($data['url']));
             $item = $this->refill($item, $field);
         }
         return $item;
+    }
+
+    /**
+     * Get source for fill
+     *
+     * @param \AnimeDb\Bundle\CatalogBundle\Entity\Item $item
+     *
+     * @return string
+     */
+    public function getSourceForFill(Item $item)
+    {
+        /* @var $source \AnimeDb\Bundle\CatalogBundle\Entity\Source */
+        foreach ($item->getSources() as $source) {
+            if (strpos($source->getUrl(), $this->browser->getHost()) === 0) {
+                return $source->getUrl();
+            }
+        }
+        return '';
     }
 }

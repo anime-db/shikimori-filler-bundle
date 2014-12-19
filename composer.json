@@ -4,7 +4,7 @@
     "type": "anime-db-plugin",
     "description": "Plugin Shikimori for the catalog Anime DB",
     "homepage": "http://github.com/anime-db/shikimori-filler-bundle",
-    "version": "0.1.8",
+    "version": "0.1.9",
     "autoload": {
         "psr-4": { "AnimeDb\\Bundle\\ShikimoriFillerBundle\\": "src/" }
     },
@@ -13,7 +13,7 @@
     },
     "require": {
         "php": ">=5.4.0",
-        "anime-db/catalog-bundle": ">=0.4.14",
+        "anime-db/catalog-bundle": ">=0.4.17",
         "anime-db/shikimori-browser-bundle": "0.1.*"
     },
     "minimum-stability": "dev"

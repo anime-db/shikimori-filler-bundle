@@ -13,17 +13,16 @@ namespace AnimeDb\Bundle\ShikimoriFillerBundle\Service;
 use AnimeDb\Bundle\CatalogBundle\Plugin\Fill\Filler\Filler as FillerPlugin;
 use AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser;
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use AnimeDb\Bundle\CatalogBundle\Entity\Item;
 use AnimeDb\Bundle\CatalogBundle\Entity\Name;
 use AnimeDb\Bundle\CatalogBundle\Entity\Source;
-use AnimeDb\Bundle\CatalogBundle\Entity\Type;
 use AnimeDb\Bundle\CatalogBundle\Entity\Genre;
 use AnimeDb\Bundle\CatalogBundle\Entity\Studio;
 use AnimeDb\Bundle\CatalogBundle\Entity\Image;
-use AnimeDb\Bundle\AppBundle\Entity\Field\Image as ImageField;
-use AnimeDb\Bundle\ShikimoriFillerBundle\Form\Filler as FillerForm;
+use AnimeDb\Bundle\AppBundle\Service\Downloader;
+use AnimeDb\Bundle\ShikimoriFillerBundle\Form\Type\Filler as FillerForm;
 use Knp\Menu\ItemInterface;
+use AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\EntityInterface;
 
 /**
  * Search from site shikimori.org
@@ -105,11 +104,11 @@ class Filler extends FillerPlugin
     private $doctrine;
 
     /**
-     * Validator
+     * Downloader
      *
-     * @var \Symfony\Component\Validator\Validator\ValidatorInterface
+     * @var \AnimeDb\Bundle\AppBundle\Service\Downloader
      */
-    private $validator;
+    private $downloader;
 
     /**
      * Locale
@@ -123,18 +122,14 @@ class Filler extends FillerPlugin
      *
      * @param \AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser $browser
      * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine
-     * @param \Symfony\Component\Validator\Validator\ValidatorInterface $validator
+     * @param \AnimeDb\Bundle\AppBundle\Service\Downloader $downloader
      * @param string $locale
      */
-    public function __construct(
-        Browser $browser,
-        Registry $doctrine,
-        ValidatorInterface $validator,
-        $locale
-    ) {
+    public function __construct(Browser $browser, Registry $doctrine, Downloader $downloader, $locale)
+    {
         $this->browser = $browser;
         $this->doctrine = $doctrine;
-        $this->validator = $validator;
+        $this->downloader = $downloader;
         $this->locale = $locale;
     }
 
@@ -159,7 +154,7 @@ class Filler extends FillerPlugin
     /**
      * Get form
      *
-     * @return \AnimeDb\Bundle\ShikimoriFillerBundle\Form\Filler
+     * @return \AnimeDb\Bundle\ShikimoriFillerBundle\Form\Type\Filler
      */
     public function getForm()
     {
@@ -176,7 +171,7 @@ class Filler extends FillerPlugin
     public function buildMenu(ItemInterface $item)
     {
         return parent::buildMenu($item)
-            ->setLinkAttribute('class', 'icon-label icon-plugin-shikimori');
+            ->setLinkAttribute('class', 'icon-label icon-label-plugin-shikimori');
     }
 
     /**
@@ -304,8 +299,8 @@ class Filler extends FillerPlugin
         if (!empty($body['image']) && !empty($body['image']['original'])) {
             try {
                 if ($path = parse_url($body['image']['original'], PHP_URL_PATH)) {
-                    $target = self::NAME.'/'.$body['id'].'/cover.'.pathinfo($path, PATHINFO_EXTENSION);
-                    $item->setCover($this->uploadImage($this->browser->getHost().$body['image']['original'], $target));
+                    $item->setCover(self::NAME.'/'.$body['id'].'/cover.'.pathinfo($path, PATHINFO_EXTENSION));
+                    $this->uploadImage($this->browser->getHost().$body['image']['original'], $item);
                 }
             } catch (\Exception $e) {} // error while retrieving images is not critical
         }
@@ -405,10 +400,9 @@ class Filler extends FillerPlugin
         $images = $this->browser->get(str_replace('#ID#', $body['id'], self::FILL_IMAGES_URL));
         foreach ($images as $image) {
             if ($path = parse_url($image['original'], PHP_URL_PATH)) {
-                $target = self::NAME.'/'.$body['id'].'/'.pathinfo($path, PATHINFO_BASENAME);
-                if ($path = $this->uploadImage($this->browser->getHost().$image['original'], $target)) {
-                    $image = new Image();
-                    $image->setSource($path);
+                $image = new Image();
+                $image->setSource(self::NAME.'/'.$body['id'].'/'.pathinfo($path, PATHINFO_BASENAME));
+                if ($this->uploadImage($this->browser->getHost().$image['original'], $image)) {
                     $item->addImage($image);
                 }
             }
@@ -420,14 +414,12 @@ class Filler extends FillerPlugin
      * Upload image from url
      *
      * @param string $url
-     * @param string|null $target
+     * @param \AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\EntityInterface $entity
      *
-     * @return string
+     * @return boolean
      */
-    protected function uploadImage($url, $target = null) {
-        $image = new ImageField();
-        $image->setRemote($url);
-        $image->upload($this->validator, $target);
-        return $image->getPath();
+    protected function uploadImage($url, EntityInterface $entity)
+    {
+        return $this->downloader->image($url, $this->downloader->getRoot().$entity->getWebPath());
     }
 }

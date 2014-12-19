@@ -13,7 +13,7 @@ namespace AnimeDb\Bundle\ShikimoriFillerBundle\Service;
 use AnimeDb\Bundle\CatalogBundle\Plugin\Fill\Search\Search as SearchPlugin;
 use AnimeDb\Bundle\CatalogBundle\Plugin\Fill\Search\Item as ItemSearch;
 use AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser;
-use AnimeDb\Bundle\ShikimoriFillerBundle\Form\Search as SearchForm;
+use AnimeDb\Bundle\ShikimoriFillerBundle\Form\Type\Search as SearchForm;
 use Knp\Menu\ItemInterface;
 
 /**
@@ -70,7 +70,7 @@ class Search extends SearchPlugin
     /**
      * Search form
      *
-     * @var \AnimeDb\Bundle\ShikimoriFillerBundle\Form\Search
+     * @var \AnimeDb\Bundle\ShikimoriFillerBundle\Form\Type\Search
      */
     protected $form;
 
@@ -78,7 +78,7 @@ class Search extends SearchPlugin
      * Construct
      *
      * @param \AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser $browser
-     * @param \AnimeDb\Bundle\ShikimoriFillerBundle\Form\Search $form
+     * @param \AnimeDb\Bundle\ShikimoriFillerBundle\Form\Type\Search $form
      * @param string $locale
      */
     public function __construct(Browser $browser, SearchForm $form, $locale) {
@@ -115,7 +115,7 @@ class Search extends SearchPlugin
     public function buildMenu(ItemInterface $item)
     {
         return parent::buildMenu($item)
-            ->setLinkAttribute('class', 'icon-label icon-plugin-shikimori');
+            ->setLinkAttribute('class', 'icon-label icon-label-plugin-shikimori');
     }
 
     /**
@@ -166,7 +166,7 @@ class Search extends SearchPlugin
     /**
      * Get form
      *
-     * @return \AnimeDb\Bundle\ShikimoriFillerBundle\Form\Search
+     * @return \AnimeDb\Bundle\ShikimoriFillerBundle\Form\Type\Search
      */
     public function getForm()
     {
