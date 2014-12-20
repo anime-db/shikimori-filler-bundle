@@ -16,7 +16,6 @@ use AnimeDb\Bundle\ShikimoriFillerBundle\Service\Filler;
 use AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser;
 use AnimeDb\Bundle\CatalogBundle\Event\Storage\AddNewItem;
 use AnimeDb\Bundle\CatalogBundle\Event\Storage\StoreEvents;
-use AnimeDb\Bundle\CatalogBundle\Entity\Name;
 
 /**
  * Refiller for new item
