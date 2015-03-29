@@ -8,10 +8,10 @@ php:
 notifications:
     email: dev@anime-db.org
 
-before_script:
+install:
     - composer self-update
     - composer --version
-    - composer install --dev --prefer-dist
+    - composer install --prefer-dist
 
 script:
     - phpunit --verbose --coverage-clover=coverage.clover
