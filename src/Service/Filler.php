@@ -46,7 +46,7 @@ class Filler extends FillerPlugin
      *
      * @var string
      */
-    const REG_ITEM_ID = '#/animes/(?<id>\d+)\-#';
+    const REG_ITEM_ID = '#/animes/z?(?<id>\d+)\-#';
 
     /**
      * Path to item screenshots.
@@ -158,7 +158,7 @@ class Filler extends FillerPlugin
             strpos($data['url'], $this->browser->getHost()) !== 0 ||
             !preg_match(self::REG_ITEM_ID, $data['url'], $match)
         ) {
-            return;
+            return null;
         }
         $path = str_replace('#ID#', $match['id'], self::FILL_URL);
         $body = $this->browser->get($path);
