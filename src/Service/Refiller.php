@@ -10,7 +10,6 @@ namespace AnimeDb\Bundle\ShikimoriFillerBundle\Service;
 
 use AnimeDb\Bundle\CatalogBundle\Plugin\Fill\Refiller\RefillerInterface;
 use AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser;
-use AnimeDb\Bundle\CatalogBundle\Plugin\Fill\Search\Item as ItemSearch;
 use AnimeDb\Bundle\CatalogBundle\Plugin\Fill\Refiller\Item as ItemRefiller;
 use AnimeDb\Bundle\CatalogBundle\Entity\Item;
 use AnimeDb\Bundle\CatalogBundle\Entity\Source;
@@ -232,7 +231,6 @@ class Refiller implements RefillerInterface
         // do search
         if ($name) {
             $result = $this->search->search(['name' => $name]);
-            /* @var $item ItemSearch */
             foreach ($result as $key => $item) {
                 if ($query = parse_url($item->getLink(), PHP_URL_QUERY)) {
                     parse_str($query, $query);
