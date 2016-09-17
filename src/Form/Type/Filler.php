@@ -1,8 +1,7 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
@@ -15,7 +14,6 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class Filler extends AbstractType
 {
-
     /**
      * @var string
      */
@@ -45,7 +43,7 @@ class Filler extends AbstractType
             ])
             ->add('frames', 'checkbox', [
                 'label' => 'Upload frames',
-                'required' => false
+                'required' => false,
             ]);
     }
 
@@ -55,7 +53,7 @@ class Filler extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
-            'csrf_protection' => false
+            'csrf_protection' => false,
         ]);
     }
 
