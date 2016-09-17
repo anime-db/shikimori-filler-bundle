@@ -7,7 +7,6 @@
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\ShikimoriFillerBundle\Form\Type;
 
 use AnimeDb\Bundle\CatalogBundle\Form\Type\Plugin\Search as SearchPlugin;
@@ -15,33 +14,20 @@ use AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-/**
- * Search from
- * 
- * @link http://shikimori.org/
- * @package AnimeDb\Bundle\ShikimoriFillerBundle\Form\Type
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class Search extends SearchPlugin
 {
 
     /**
-     * Browser
-     *
-     * @var \AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser
+     * @var Browser
      */
     private $browser;
 
     /**
-     * Locale
-     *
      * @var string
      */
     protected $locale;
 
     /**
-     * Types
-     *
      * @var array
      */
     protected $types = [
@@ -54,9 +40,7 @@ class Search extends SearchPlugin
     ];
 
     /**
-     * Construct
-     *
-     * @param \AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser $browser
+     * @param Browser $browser
      * @param string $locale
      */
     public function __construct(Browser $browser, $locale) {
@@ -65,8 +49,8 @@ class Search extends SearchPlugin
     }
 
     /**
-     * (non-PHPdoc)
-     * @see \Symfony\Component\Form\AbstractType::buildForm()
+     * @param FormBuilderInterface $builder
+     * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -101,8 +85,7 @@ class Search extends SearchPlugin
     }
 
     /**
-     * (non-PHPdoc)
-     * @see Symfony\Component\Form.AbstractType::setDefaultOptions()
+     * @param OptionsResolverInterface $resolver
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {

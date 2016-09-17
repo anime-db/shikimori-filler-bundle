@@ -7,32 +7,21 @@
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\ShikimoriFillerBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-/**
- * Get item from filler
- *
- * @package AnimeDb\Bundle\ShikimoriFillerBundle\Form\Type
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class Filler extends AbstractType
 {
 
     /**
-     * HTTP host
-     *
      * @var string
      */
     protected $host;
 
     /**
-     * Construct
-     *
      * @param string $host
      */
     public function __construct($host)
@@ -41,8 +30,8 @@ class Filler extends AbstractType
     }
 
     /**
-     * (non-PHPdoc)
-     * @see \Symfony\Component\Form\AbstractType::buildForm()
+     * @param FormBuilderInterface $builder
+     * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -61,8 +50,7 @@ class Filler extends AbstractType
     }
 
     /**
-     * (non-PHPdoc)
-     * @see Symfony\Component\Form.AbstractType::setDefaultOptions()
+     * @param OptionsResolverInterface $resolver
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
@@ -72,8 +60,7 @@ class Filler extends AbstractType
     }
 
     /**
-     * (non-PHPdoc)
-     * @see \Symfony\Component\Form\FormTypeInterface::getName()
+     * @return string
      */
     public function getName()
     {

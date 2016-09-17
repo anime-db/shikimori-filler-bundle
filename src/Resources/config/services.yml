@@ -1,7 +1,7 @@
 services:
     anime_db.shikimori.search:
         class: AnimeDb\Bundle\ShikimoriFillerBundle\Service\Search
-        arguments: [ @anime_db.shikimori.browser, @anime_db.shikimori.search_form, %locale% ]
+        arguments: [ '@anime_db.shikimori.browser', '@anime_db.shikimori.search_form', '%locale%' ]
         tags:
             - { name: anime_db.search }
         calls:
@@ -10,7 +10,7 @@ services:
 
     anime_db.shikimori.filler:
         class: AnimeDb\Bundle\ShikimoriFillerBundle\Service\Filler
-        arguments: [ @anime_db.shikimori.browser, @doctrine, @anime_db.downloader, %locale% ]
+        arguments: [ '@anime_db.shikimori.browser', '@doctrine', '@anime_db.downloader', '%locale%' ]
         tags:
             - { name: anime_db.filler }
         calls:
@@ -18,20 +18,20 @@ services:
 
     anime_db.shikimori.refiller:
         class: AnimeDb\Bundle\ShikimoriFillerBundle\Service\Refiller
-        arguments: [ @anime_db.shikimori.browser, @anime_db.shikimori.filler, @anime_db.shikimori.search ]
+        arguments: [ '@anime_db.shikimori.browser', '@anime_db.shikimori.filler', '@anime_db.shikimori.search' ]
         tags:
             - { name: anime_db.refiller }
 
     anime_db.shikimori.search_form:
         class: AnimeDb\Bundle\ShikimoriFillerBundle\Form\Type\Search
-        arguments: [ @anime_db.shikimori.browser, %locale% ]
+        arguments: [ '@anime_db.shikimori.browser', '%locale%' ]
 
     anime_db.shikimori.listener.refiller:
         class: AnimeDb\Bundle\ShikimoriFillerBundle\Event\Listener\Refiller
         arguments:
-            - @event_dispatcher
-            - @anime_db.shikimori.refiller
-            - @anime_db.shikimori.filler
-            - @anime_db.shikimori.browser
+            - '@event_dispatcher'
+            - '@anime_db.shikimori.refiller'
+            - '@anime_db.shikimori.filler'
+            - '@anime_db.shikimori.browser'
         tags:
             - { name: kernel.event_listener, event: anime_db.storage.add_new_item, method: onAddNewItem }

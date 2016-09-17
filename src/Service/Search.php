@@ -7,7 +7,6 @@
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\ShikimoriFillerBundle\Service;
 
 use AnimeDb\Bundle\CatalogBundle\Plugin\Fill\Search\Search as SearchPlugin;
@@ -16,25 +15,14 @@ use AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser;
 use AnimeDb\Bundle\ShikimoriFillerBundle\Form\Type\Search as SearchForm;
 use Knp\Menu\ItemInterface;
 
-/**
- * Search from site shikimori.org
- * 
- * @link http://shikimori.org/
- * @package AnimeDb\Bundle\ShikimoriFillerBundle\Service
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class Search extends SearchPlugin
 {
     /**
-     * Name
-     *
      * @var string
      */
     const NAME = 'shikimori';
 
     /**
-     * Title
-     *
      * @var string
      */
     const TITLE = 'Shikimori.org';
@@ -49,68 +37,57 @@ class Search extends SearchPlugin
     /**
      * Limit the search results list
      *
-     * @var integet
+     * @var int
      */
     const DEFAULT_LIMIT = 30;
 
     /**
-     * Browser
-     *
-     * @var \AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser
+     * @var Browser
      */
     private $browser;
 
     /**
-     * Locale
-     *
      * @var string
      */
     protected $locale;
 
     /**
-     * Search form
-     *
-     * @var \AnimeDb\Bundle\ShikimoriFillerBundle\Form\Type\Search
+     * @var SearchForm
      */
     protected $form;
 
     /**
-     * Construct
-     *
-     * @param \AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser $browser
-     * @param \AnimeDb\Bundle\ShikimoriFillerBundle\Form\Type\Search $form
+     * @param Browser $browser
+     * @param SearchForm $form
      * @param string $locale
      */
-    public function __construct(Browser $browser, SearchForm $form, $locale) {
+    public function __construct(Browser $browser, SearchForm $form, $locale)
+    {
         $this->browser = $browser;
         $this->locale = $locale;
         $this->form = $form;
     }
 
     /**
-     * Get name
-     *
      * @return string
      */
-    public function getName() {
+    public function getName()
+    {
         return self::NAME;
     }
 
     /**
-     * Get title
-     *
      * @return string
      */
-    public function getTitle() {
+    public function getTitle()
+    {
         return self::TITLE;
     }
 
     /**
-     * Build menu for plugin
+     * @param ItemInterface $item
      *
-     * @param \Knp\Menu\ItemInterface $item
-     *
-     * @return \Knp\Menu\ItemInterface
+     * @return ItemInterface
      */
     public function buildMenu(ItemInterface $item)
     {
@@ -119,18 +96,9 @@ class Search extends SearchPlugin
     }
 
     /**
-     * Search source by name
-     *
-     * Return structure
-     * <code>
-     * [
-     *     \AnimeDb\Bundle\CatalogBundle\Plugin\Fill\Search\Item
-     * ]
-     * </code>
-     *
      * @param array $data
      *
-     * @return array
+     * @return ItemSearch[]
      */
     public function search(array $data)
     {
@@ -160,13 +128,12 @@ class Search extends SearchPlugin
                 $this->browser->getHost().$item['url']
             );
         }
+
         return $body;
     }
 
     /**
-     * Get form
-     *
-     * @return \AnimeDb\Bundle\ShikimoriFillerBundle\Form\Type\Search
+     * @return SearchForm
      */
     public function getForm()
     {

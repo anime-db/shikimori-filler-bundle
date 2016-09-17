@@ -7,7 +7,6 @@
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\ShikimoriFillerBundle\Event\Listener;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -17,49 +16,33 @@ use AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser;
 use AnimeDb\Bundle\CatalogBundle\Event\Storage\AddNewItem;
 use AnimeDb\Bundle\CatalogBundle\Event\Storage\StoreEvents;
 
-/**
- * Refiller for new item
- *
- * @package AnimeDb\Bundle\ShikimoriFillerBundle\Event\Listener
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class Refiller
 {
     /**
-     * Dispatcher
-     *
-     * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+     * @var EventDispatcherInterface
      */
     protected $dispatcher;
 
     /**
-     * Refiller
-     *
-     * @var \AnimeDb\Bundle\ShikimoriFillerBundle\Service\Refiller
+     * @var Refiller
      */
     protected $refiller;
 
     /**
-     * Filler
-     *
-     * @var \AnimeDb\Bundle\ShikimoriFillerBundle\Service\Filler
+     * @var Filler
      */
     protected $filler;
 
     /**
-     * Browser
-     *
-     * @var \AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser
+     * @var Browser
      */
     private $browser;
 
     /**
-     * Construct
-     *
-     * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
-     * @param \AnimeDb\Bundle\ShikimoriFillerBundle\Service\Refiller $refiller
-     * @param \AnimeDb\Bundle\ShikimoriFillerBundle\Service\Filler $filler
-     * @param \AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser $browser
+     * @param EventDispatcherInterface $dispatcher
+     * @param RefillerService $refiller
+     * @param Filler $filler
+     * @param Browser $browser
      */
     public function __construct(
         EventDispatcherInterface $dispatcher,
@@ -74,9 +57,7 @@ class Refiller
     }
 
     /**
-     * On add new item
-     *
-     * @param \AnimeDb\Bundle\CatalogBundle\Event\Storage\AddNewItem $event
+     * @param AddNewItem $event
      */
     public function onAddNewItem(AddNewItem $event)
     {

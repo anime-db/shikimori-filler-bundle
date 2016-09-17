@@ -7,7 +7,6 @@
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\ShikimoriFillerBundle\Service;
 
 use AnimeDb\Bundle\CatalogBundle\Plugin\Fill\Filler\Filler as FillerPlugin;
@@ -24,25 +23,14 @@ use AnimeDb\Bundle\ShikimoriFillerBundle\Form\Type\Filler as FillerForm;
 use Knp\Menu\ItemInterface;
 use AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\EntityInterface;
 
-/**
- * Search from site shikimori.org
- * 
- * @link http://shikimori.org/
- * @package AnimeDb\Bundle\ShikimoriFillerBundle\Service
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class Filler extends FillerPlugin
 {
     /**
-     * Name
-     *
      * @var string
      */
     const NAME = 'shikimori';
 
     /**
-     * Title
-     *
      * @var string
      */
     const TITLE = 'Shikimori.org';
@@ -90,39 +78,29 @@ class Filler extends FillerPlugin
     const ANI_DB_URL = 'http://anidb.net/perl-bin/animedb.pl?show=anime&aid=#ID#';
 
     /**
-     * Browser
-     *
-     * @var \AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser
+     * @var Browser
      */
     private $browser;
 
     /**
-     * Doctrine
-     *
-     * @var \Doctrine\Bundle\DoctrineBundle\Registry
+     * @var Registry
      */
     private $doctrine;
 
     /**
-     * Downloader
-     *
-     * @var \AnimeDb\Bundle\AppBundle\Service\Downloader
+     * @var Downloader
      */
     private $downloader;
 
     /**
-     * Locale
-     *
      * @var string
      */
     protected $locale;
 
     /**
-     * Construct
-     *
-     * @param \AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser $browser
-     * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine
-     * @param \AnimeDb\Bundle\AppBundle\Service\Downloader $downloader
+     * @param Browser $browser
+     * @param Registry $doctrine
+     * @param Downloader $downloader
      * @param string $locale
      */
     public function __construct(Browser $browser, Registry $doctrine, Downloader $downloader, $locale)
@@ -134,27 +112,23 @@ class Filler extends FillerPlugin
     }
 
     /**
-     * Get name
-     *
      * @return string
      */
-    public function getName() {
+    public function getName()
+    {
         return self::NAME;
     }
 
     /**
-     * Get title
-     *
      * @return string
      */
-    public function getTitle() {
+    public function getTitle()
+    {
         return self::TITLE;
     }
 
     /**
-     * Get form
-     *
-     * @return \AnimeDb\Bundle\ShikimoriFillerBundle\Form\Type\Filler
+     * @return FillerForm
      */
     public function getForm()
     {
@@ -162,11 +136,9 @@ class Filler extends FillerPlugin
     }
 
     /**
-     * Build menu for plugin
+     * @param ItemInterface $item
      *
-     * @param \Knp\Menu\ItemInterface $item
-     *
-     * @return \Knp\Menu\ItemInterface
+     * @return ItemInterface
      */
     public function buildMenu(ItemInterface $item)
     {
@@ -179,7 +151,7 @@ class Filler extends FillerPlugin
      *
      * @param array $data
      *
-     * @return \AnimeDb\Bundle\CatalogBundle\Entity\Item|null
+     * @return Item|null
      */
     public function fill(array $data)
     {
@@ -214,19 +186,19 @@ class Filler extends FillerPlugin
         $this->setNames($item, $body);
         $this->setGenres($item, $body);
         $this->setStudio($item, $body);
+
         if (!empty($data['frames'])) {
             $this->setImages($item, $body);
         }
+
         return $item;
     }
 
     /**
-     * Set item sources
-     *
-     * @param \AnimeDb\Bundle\CatalogBundle\Entity\Item $item
+     * @param Item $item
      * @param array $body
      *
-     * @return \AnimeDb\Bundle\CatalogBundle\Entity\Item
+     * @return Item
      */
     public function setSources(Item $item, $body)
     {
@@ -252,28 +224,43 @@ class Filler extends FillerPlugin
     }
 
     /**
-     * Set item names
-     *
-     * @param \AnimeDb\Bundle\CatalogBundle\Entity\Item $item
+     * @param Item $item
      * @param array $body
      *
-     * @return \AnimeDb\Bundle\CatalogBundle\Entity\Item
+     * @return Item
      */
     public function setNames(Item $item, $body)
     {
         $names = [];
         // set a name based on the locale
         if ($this->locale == 'ru' && $body['russian']) {
-            $names = array_merge([$body['name']], $body['english'], $body['japanese'], $body['synonyms']);
+            $names = array_merge(
+                [$body['name']],
+                $body['english'],
+                $body['japanese'],
+                $body['synonyms']
+            );
             $item->setName($body['russian']);
+
         } elseif ($this->locale == 'ja' && $body['japanese']) {
             $item->setName(array_shift($body['japanese']));
-            $names = array_merge([$body['name']], [$body['russian']], $body['english'], $body['japanese'], $body['synonyms']);
+            $names = array_merge(
+                [$body['name']],
+                [$body['russian']],
+                $body['english'],
+                $body['japanese'],
+                $body['synonyms']
+            );
         }
 
         // default list names
         if (!$item->getName()) {
-            $names = array_merge([$body['russian']], $body['english'], $body['japanese'], $body['synonyms']);
+            $names = array_merge(
+                [$body['russian']],
+                $body['english'],
+                $body['japanese'],
+                $body['synonyms']
+            );
             $item->setName($body['name']);
         }
 
@@ -287,12 +274,10 @@ class Filler extends FillerPlugin
     }
 
     /**
-     * Set item cover
-     *
-     * @param \AnimeDb\Bundle\CatalogBundle\Entity\Item $item
+     * @param Item $item
      * @param array $body
      *
-     * @return \AnimeDb\Bundle\CatalogBundle\Entity\Item
+     * @return Item
      */
     public function setCover(Item $item, $body)
     {
@@ -302,18 +287,19 @@ class Filler extends FillerPlugin
                     $item->setCover(self::NAME.'/'.$body['id'].'/cover.'.pathinfo($path, PATHINFO_EXTENSION));
                     $this->uploadImage($this->browser->getHost().$body['image']['original'], $item);
                 }
-            } catch (\Exception $e) {} // error while retrieving images is not critical
+            } catch (\Exception $e) {
+                // error while retrieving images is not critical
+            }
         }
+
         return $item;
     }
 
     /**
-     * Set item type
-     *
-     * @param \AnimeDb\Bundle\CatalogBundle\Entity\Item $item
+     * @param Item $item
      * @param array $body
      *
-     * @return \AnimeDb\Bundle\CatalogBundle\Entity\Item
+     * @return Item
      */
     public function setType(Item $item, $body)
     {
@@ -323,19 +309,24 @@ class Filler extends FillerPlugin
             'Special' => 'TV-special'
         ];
         $type = isset($rename[$body['kind']]) ? $rename[$body['kind']] : $body['kind'];
-        return $item->setType($this->doctrine->getRepository('AnimeDbCatalogBundle:Type')->findOneByName($type));
+
+        return $item->setType(
+            $this
+                ->doctrine
+                ->getRepository('AnimeDbCatalogBundle:Type')
+                ->findOneBy(['name' => $type])
+        );
     }
 
     /**
-     * Set item genres
-     *
-     * @param \AnimeDb\Bundle\CatalogBundle\Entity\Item $item
+     * @param Item $item
      * @param array $body
      *
-     * @return \AnimeDb\Bundle\CatalogBundle\Entity\Item
+     * @return Item
      */
     public function setGenres(Item $item, $body)
     {
+        $repository = $this->doctrine->getRepository('AnimeDbCatalogBundle:Genre');
         $rename = [
             'Martial Arts' => 'Martial arts',
             'Shoujo Ai' => 'Shoujo-ai',
@@ -346,27 +337,27 @@ class Filler extends FillerPlugin
             'Historical' => 'History',
             'Military' => 'War'
         ];
-        $repository = $this->doctrine->getRepository('AnimeDbCatalogBundle:Genre');
+
         foreach ($body['genres'] as $genre) {
             $genre = isset($rename[$genre['name']]) ? $rename[$genre['name']] : $genre['name'];
-            $genre = $repository->findOneByName($genre);
+            $genre = $repository->findOneBy(['name' => $genre]);
             if ($genre instanceof Genre) {
                 $item->addGenre($genre);
             }
         }
+
         return $item;
     }
 
     /**
-     * Set item studio
-     *
-     * @param \AnimeDb\Bundle\CatalogBundle\Entity\Item $item
+     * @param Item $item
      * @param array $body
      *
-     * @return \AnimeDb\Bundle\CatalogBundle\Entity\Item
+     * @return Item
      */
     public function setStudio(Item $item, $body)
     {
+        $repository = $this->doctrine->getRepository('AnimeDbCatalogBundle:Studio');
         $rename = [
             'Arms' => 'Arms Corporation',
             'Mushi Productions' => 'Mushi Production',
@@ -374,30 +365,30 @@ class Filler extends FillerPlugin
             'Tezuka Production' => 'Tezuka Productions',
             'CoMix Wave' => 'CoMix Wave Inc.'
         ];
-        $repository = $this->doctrine->getRepository('AnimeDbCatalogBundle:Studio');
+
         foreach ($body['studios'] as $studio) {
             $name = isset($rename[$studio['name']]) ? $rename[$studio['name']] : $studio['name'];
             $name = $studio['name'] != $studio['filtered_name'] ? [$name, $studio['filtered_name']] : $name;
-            $studio = $repository->findOneByName($name);
+            $studio = $repository->findOneBy(['name' => $name]);
             if ($studio instanceof Studio) {
                 $item->setStudio($studio);
                 break;
             }
         }
+
         return $item;
     }
 
     /**
-     * Set item images
-     *
-     * @param \AnimeDb\Bundle\CatalogBundle\Entity\Item $item
+     * @param Item $item
      * @param array $body
      *
-     * @return \AnimeDb\Bundle\CatalogBundle\Entity\Item
+     * @return Item
      */
     public function setImages(Item $item, $body)
     {
         $images = $this->browser->get(str_replace('#ID#', $body['id'], self::FILL_IMAGES_URL));
+
         foreach ($images as $image) {
             if ($path = parse_url($image['original'], PHP_URL_PATH)) {
                 $image = new Image();
@@ -407,14 +398,13 @@ class Filler extends FillerPlugin
                 }
             }
         }
+
         return $item;
     }
 
     /**
-     * Upload image from url
-     *
      * @param string $url
-     * @param \AnimeDb\Bundle\AppBundle\Service\Downloader\Entity\EntityInterface $entity
+     * @param EntityInterface $entity
      *
      * @return boolean
      */
@@ -424,8 +414,6 @@ class Filler extends FillerPlugin
     }
 
     /**
-     * Is supported URL
-     *
      * @param string $url
      *
      * @return boolean
