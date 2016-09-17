@@ -23,7 +23,7 @@ class Refiller
     protected $dispatcher;
 
     /**
-     * @var Refiller
+     * @var RefillerService
      */
     protected $refiller;
 
