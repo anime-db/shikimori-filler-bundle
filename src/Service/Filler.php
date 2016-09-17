@@ -306,7 +306,8 @@ class Filler extends FillerPlugin
             'Music' => 'Music video',
             'Special' => 'TV-special',
         ];
-        $type = isset($rename[$body['kind']]) ? $rename[$body['kind']] : $body['kind'];
+        $type = ucfirst($body['kind']);
+        $type = isset($rename[$type]) ? $rename[$type] : $type;
 
         return $item->setType(
             $this
