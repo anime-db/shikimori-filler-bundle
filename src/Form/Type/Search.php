@@ -1,47 +1,31 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\ShikimoriFillerBundle\Form\Type;
 
 use AnimeDb\Bundle\CatalogBundle\Form\Type\Plugin\Search as SearchPlugin;
 use AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-/**
- * Search from
- * 
- * @link http://shikimori.org/
- * @package AnimeDb\Bundle\ShikimoriFillerBundle\Form\Type
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class Search extends SearchPlugin
 {
-
     /**
-     * Browser
-     *
-     * @var \AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser
+     * @var Browser
      */
     private $browser;
 
     /**
-     * Locale
-     *
      * @var string
      */
     protected $locale;
 
     /**
-     * Types
-     *
      * @var array
      */
     protected $types = [
@@ -50,23 +34,22 @@ class Search extends SearchPlugin
         'ONA',
         'OVA',
         'Special',
-        'TV'
+        'TV',
     ];
 
     /**
-     * Construct
-     *
-     * @param \AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser $browser
+     * @param Browser $browser
      * @param string $locale
      */
-    public function __construct(Browser $browser, $locale) {
+    public function __construct(Browser $browser, $locale)
+    {
         $this->browser = $browser;
         $this->locale = $locale;
     }
 
     /**
-     * (non-PHPdoc)
-     * @see \Symfony\Component\Form\AbstractType::buildForm()
+     * @param FormBuilderInterface $builder
+     * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -86,28 +69,27 @@ class Search extends SearchPlugin
 
         $builder
             ->add('genre', 'choice', [
-                'choices'  => $genres,
-                'required' => false
+                'choices' => $genres,
+                'required' => false,
             ])
             ->add('type', 'choice', [
-                'choices'  => array_combine($this->types, $this->types),
-                'required' => false
+                'choices' => array_combine($this->types, $this->types),
+                'required' => false,
             ])
             ->add('season', 'text', [
                 'required' => false,
                 'label' => 'Year of the premier',
-                'help' => 'You can select the period of the years indicated by a dash: 2002-2004'
+                'help' => 'You can select the period of the years indicated by a dash: 2002-2004',
             ]);
     }
 
     /**
-     * (non-PHPdoc)
-     * @see Symfony\Component\Form.AbstractType::setDefaultOptions()
+     * @param OptionsResolver $resolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'csrf_protection' => false
+            'csrf_protection' => false,
         ]);
     }
 }
