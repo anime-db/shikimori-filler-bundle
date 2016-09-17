@@ -1,8 +1,7 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
@@ -36,42 +35,42 @@ class Filler extends FillerPlugin
     const TITLE = 'Shikimori.org';
 
     /**
-     * Path to item
+     * Path to item.
      *
      * @var string
      */
     const FILL_URL = '/animes/#ID#';
 
     /**
-     * RegExp for get item id
+     * RegExp for get item id.
      *
      * @var string
      */
     const REG_ITEM_ID = '#/animes/(?<id>\d+)\-#';
 
     /**
-     * Path to item screenshots
+     * Path to item screenshots.
      *
      * @var string
      */
     const FILL_IMAGES_URL = '/animes/#ID#/screenshots';
 
     /**
-     * World-art item url
+     * World-art item url.
      *
      * @var string
      */
     const WORLD_ART_URL = 'http://www.world-art.ru/animation/animation.php?id=#ID#';
 
     /**
-     * MyAnimeList item url
+     * MyAnimeList item url.
      *
      * @var string
      */
     const MY_ANIME_LIST_URL = 'http://myanimelist.net/anime/#ID#';
 
     /**
-     * AniDB item url
+     * AniDB item url.
      *
      * @var string
      */
@@ -147,7 +146,7 @@ class Filler extends FillerPlugin
     }
 
     /**
-     * Fill item from source
+     * Fill item from source.
      *
      * @param array $data
      *
@@ -159,7 +158,7 @@ class Filler extends FillerPlugin
             strpos($data['url'], $this->browser->getHost()) !== 0 ||
             !preg_match(self::REG_ITEM_ID, $data['url'], $match)
         ) {
-            return null;
+            return;
         }
         $path = str_replace('#ID#', $match['id'], self::FILL_URL);
         $body = $this->browser->get($path);
@@ -241,7 +240,6 @@ class Filler extends FillerPlugin
                 $body['synonyms']
             );
             $item->setName($body['russian']);
-
         } elseif ($this->locale == 'ja' && $body['japanese']) {
             $item->setName(array_shift($body['japanese']));
             $names = array_merge(
@@ -306,7 +304,7 @@ class Filler extends FillerPlugin
         $rename = [
             'Movie' => 'Feature',
             'Music' => 'Music video',
-            'Special' => 'TV-special'
+            'Special' => 'TV-special',
         ];
         $type = isset($rename[$body['kind']]) ? $rename[$body['kind']] : $body['kind'];
 
@@ -335,7 +333,7 @@ class Filler extends FillerPlugin
             'Slice of Life' => 'Slice of life',
             'Sci-Fi' => 'Sci-fi',
             'Historical' => 'History',
-            'Military' => 'War'
+            'Military' => 'War',
         ];
 
         foreach ($body['genres'] as $genre) {
@@ -363,7 +361,7 @@ class Filler extends FillerPlugin
             'Mushi Productions' => 'Mushi Production',
             'Film Roman, Inc.' => 'Film Roman',
             'Tezuka Production' => 'Tezuka Productions',
-            'CoMix Wave' => 'CoMix Wave Inc.'
+            'CoMix Wave' => 'CoMix Wave Inc.',
         ];
 
         foreach ($body['studios'] as $studio) {
@@ -406,7 +404,7 @@ class Filler extends FillerPlugin
      * @param string $url
      * @param EntityInterface $entity
      *
-     * @return boolean
+     * @return bool
      */
     protected function uploadImage($url, EntityInterface $entity)
     {
@@ -416,7 +414,7 @@ class Filler extends FillerPlugin
     /**
      * @param string $url
      *
-     * @return boolean
+     * @return bool
      */
     public function isSupportedUrl($url)
     {

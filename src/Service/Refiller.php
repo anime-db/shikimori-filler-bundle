@@ -1,13 +1,11 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\ShikimoriFillerBundle\Service;
 
 use AnimeDb\Bundle\CatalogBundle\Plugin\Fill\Refiller\RefillerInterface;
@@ -43,7 +41,7 @@ class Refiller implements RefillerInterface
         self::FIELD_NAMES,
         self::FIELD_STUDIO,
         self::FIELD_SOURCES,
-        self::FIELD_SUMMARY
+        self::FIELD_SUMMARY,
     ];
 
     /**
@@ -84,17 +82,18 @@ class Refiller implements RefillerInterface
     /**
      * @return string
      */
-    public function getTitle() {
+    public function getTitle()
+    {
         return self::TITLE;
     }
 
     /**
-     * Is can refill item from source
+     * Is can refill item from source.
      *
      * @param Item $item
      * @param string $field
      *
-     * @return boolean
+     * @return bool
      */
     public function isCanRefill(Item $item, $field)
     {
@@ -102,7 +101,7 @@ class Refiller implements RefillerInterface
     }
 
     /**
-     * Refill item field from source
+     * Refill item field from source.
      *
      * @param Item $item
      * @param string $field
@@ -175,7 +174,7 @@ class Refiller implements RefillerInterface
      * @param Item $item
      * @param string $field
      *
-     * @return boolean
+     * @return bool
      */
     public function isCanSearch(Item $item, $field)
     {
@@ -198,7 +197,7 @@ class Refiller implements RefillerInterface
     }
 
     /**
-     * Search items for refill
+     * Search items for refill.
      *
      * @param Item $item
      * @param string $field
@@ -216,7 +215,7 @@ class Refiller implements RefillerInterface
                     $url,
                     $item->getCover(),
                     $item->getSummary()
-                )
+                ),
             ];
         }
 
@@ -253,7 +252,7 @@ class Refiller implements RefillerInterface
     }
 
     /**
-     * Refill item field from search result
+     * Refill item field from search result.
      *
      * @param Item $item
      * @param string $field
@@ -267,6 +266,7 @@ class Refiller implements RefillerInterface
             $item->addSource((new Source())->setUrl($data['url']));
             $item = $this->refill($item, $field);
         }
+
         return $item;
     }
 

@@ -1,8 +1,7 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
@@ -28,14 +27,14 @@ class Search extends SearchPlugin
     const TITLE = 'Shikimori.org';
 
     /**
-     * Path for search
+     * Path for search.
      *
      * @var string
      */
     const SEARH_URL = '/animes?limit=#LIMIT#&search=#NAME#&genre=#GENRE#&type=#TYPE#&season=#SEASON#';
 
     /**
-     * Limit the search results list
+     * Limit the search results list.
      *
      * @var int
      */
@@ -107,7 +106,7 @@ class Search extends SearchPlugin
         $path = str_replace('#GENRE#', (isset($data['genre']) ? $data['genre'] : ''), $path);
         $path = str_replace('#TYPE#', (isset($data['type']) ? $data['type'] : ''), $path);
         $path = str_replace('#SEASON#', (isset($data['season']) ? str_replace('-', '_', $data['season']) : ''), $path);
-        $body = (array)$this->browser->get($path);
+        $body = (array) $this->browser->get($path);
 
         // build list
         foreach ($body as $key => $item) {
