@@ -11,7 +11,7 @@ namespace AnimeDb\Bundle\ShikimoriFillerBundle\Form\Type;
 use AnimeDb\Bundle\CatalogBundle\Form\Type\Plugin\Search as SearchPlugin;
 use AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class Search extends SearchPlugin
 {
@@ -84,9 +84,9 @@ class Search extends SearchPlugin
     }
 
     /**
-     * @param OptionsResolverInterface $resolver
+     * @param OptionsResolver $resolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'csrf_protection' => false,
