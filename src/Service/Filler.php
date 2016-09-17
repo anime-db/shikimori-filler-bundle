@@ -201,22 +201,18 @@ class Filler extends FillerPlugin
      */
     public function setSources(Item $item, $body)
     {
-        if (!empty($body['world_art_id'])) {
-            $source = new Source();
-            $source->setUrl(str_replace('#ID#', $body['world_art_id'], self::WORLD_ART_URL));
-            $item->addSource($source);
-        }
+        $sources = [
+            'ani_db_id' => self::ANI_DB_URL,
+            'world_art_id' => self::WORLD_ART_URL,
+            'myanimelist_id' => self::MY_ANIME_LIST_URL,
+        ];
 
-        if (!empty($body['myanimelist_id'])) {
-            $source = new Source();
-            $source->setUrl(str_replace('#ID#', $body['myanimelist_id'], self::MY_ANIME_LIST_URL));
-            $item->addSource($source);
-        }
-
-        if (!empty($body['ani_db_id'])) {
-            $source = new Source();
-            $source->setUrl(str_replace('#ID#', $body['ani_db_id'], self::ANI_DB_URL));
-            $item->addSource($source);
+        foreach ($sources as $key => $url) {
+            if (!empty($body[$key])) {
+                $source = new Source();
+                $source->setUrl(str_replace('#ID#', $body[$key], $url));
+                $item->addSource($source);
+            }
         }
 
         return $item;
